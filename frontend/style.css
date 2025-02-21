@@ -1,26 +1,51 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 * {
-    font-family: "Montserrat", serif;
+    box-sizing: inherit;
+}
+
+html {
+    font-family: "Open Sans", serif;
+    font-size: 62.5%;
+}
+
+body {
     box-sizing: border-box;
 }
 
 #chessboard,
 .player-info {
-    width: 400px;
+    width: 40rem;
 }
 
 #chessboard {
-    height: 400px;
+    height: 40rem;
     position: relative;
 }
 
-.player-name {
-    font-size: 20px;
-}
-
 .player-info {
-    padding-right: 20px;
+    padding: 0 0.5rem;
+    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
+}
+
+.player-name {
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+}
+
+.timer-box {
+    width: 6rem;
+    height: 3rem;
+    border-radius: 0.25rem;
+    /* margin: 0 0.5rem; */
+    background-color: #e9edc9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timer-text {
+    font-size: 1.6rem;
 }
