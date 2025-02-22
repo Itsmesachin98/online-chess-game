@@ -4,6 +4,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let playerName;
     let playerColor;
+    let whiteTime = 600;
+    let blackTime = 600;
+    let activeTimer = null;
+    let currentTurn = "white";
+
+    function updateTimerDisplay() {
+        document.getElementById("timer-bottom").innerText =
+            formatTime(whiteTime);
+        document.getElementById("timer-top").innerText = formatTime(blackTime);
+    }
+
+    function formatTime(time) {
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    }
+
+    function startTimer(color) {
+        if (activeTimer) clearInterval(activeTimer);
+
+        activeTimer = setInterval(() => {
+            if (color === "white") {
+                whiteTime--;
+                if (whiteTime <= 0) {
+                    clearInterval(activeTimer);
+                    alert("Black wins! White ran out of time.");
+                }
+            } else {
+                blackTime--;
+                if (blackTime <= 0) {
+                    clearInterval(activeTimer);
+                    alert("White wins! Black ran out of time.");
+                }
+            }
+            updateTimerDisplay();
+        }, 1000);
+    }
 
     socket.on("playerInfo", (info) => {
         playerName = info.name;
@@ -21,26 +58,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (whitePlayer && blackPlayer) {
                 if (playerColor === "white") {
-                    document.getElementById("player-white").innerText =
+                    document.getElementById("player-bottom").innerText =
                         "Player One";
-                    document.getElementById("player-black").innerText =
+                    document.getElementById("player-top").innerText =
                         "Player Two";
+
+                    document.getElementById("timer-bottom").innerText = "10:0";
+                    document.getElementById("timer-top").innerText = "10:00";
                 } else {
-                    document.getElementById("player-white").innerText =
+                    document.getElementById("player-bottom").innerText =
                         "Player Two";
-                    document.getElementById("player-black").innerText =
+                    document.getElementById("player-top").innerText =
                         "Player One";
+
+                    document.getElementById("timer-bottom").innerText = "10:00";
+                    document.getElementById("timer-top").innerText = "10:0";
                 }
             } else if (whitePlayer) {
-                document.getElementById("player-white").innerText =
+                document.getElementById("player-bottom").innerText =
                     "Player One";
-                document.getElementById("player-black").innerText =
+                document.getElementById("player-top").innerText =
                     "Waiting for player";
+
+                document.getElementById("timer-bottom").innerText = "10:0";
+                document.getElementById("timer-top").innerText = "10:00";
             } else if (blackPlayer) {
-                document.getElementById("player-black").innerText =
+                document.getElementById("player-bottom").innerText =
                     "Player Two";
-                document.getElementById("player-black").innerText =
+                document.getElementById("player-top").innerText =
                     "Waiting for player";
+
+                document.getElementById("timer-bottom").innerText = "10:00";
+                document.getElementById("timer-top").innerText = "10:0";
             }
         });
 
@@ -56,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         board = Chessboard("chessboard", config);
         updateStatus();
+        startTimer("white");
     });
 
     var board;
@@ -111,8 +161,9 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (game.in_draw()) {
             status = "Game draw!";
         } else {
-            if (game.turn() === "w") status = "White's turn";
-            else status = "Black's turn";
+            if (game.turn() === "w") {
+                status = "White's turn";
+            } else status = "Black's turn";
         }
 
         document.getElementById("status").innerText = status;
@@ -123,5 +174,14 @@ document.addEventListener("DOMContentLoaded", function () {
         game.move(move);
         board.position(game.fen());
         updateStatus();
+
+        // Switch timers on move
+        if (currentTurn === "white") {
+            startTimer("black");
+            currentTurn = "black";
+        } else {
+            startTimer("white");
+            currentTurn = "white";
+        }
     });
 });

@@ -12,6 +12,10 @@ body {
     box-sizing: border-box;
 }
 
+#player-board {
+    width: fit-content;
+}
+
 #chessboard,
 .player-info {
     width: 40rem;
@@ -39,7 +43,6 @@ body {
     width: 6rem;
     height: 3rem;
     border-radius: 0.25rem;
-    /* margin: 0 0.5rem; */
     background-color: #e9edc9;
     display: flex;
     justify-content: center;
