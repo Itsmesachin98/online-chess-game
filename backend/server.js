@@ -15,6 +15,28 @@ const io = new Server(server, {
 app.use(cors());
 
 let players = {}; // Stores socket ids with assigned name & color
+let timers = {
+    white: 600,
+    black: 600,
+};
+
+let activeTimer = null;
+let currentTurn = "white";
+
+// Function to start the timer
+function startTimer() {
+    if (activeTimer) clearInterval(activeTimer);
+
+    activeTimer = setInterval(() => {
+        if (timers[currentTurn] > 0) {
+            timers[currentTurn]--;
+            io.emit("timerUpdate", timers); // Send updated time to clients
+        } else {
+            clearInterval(activeTimer);
+            io.emit("gameOver", currentTurn === "white" ? "black" : "white");
+        }
+    }, 1000);
+}
 
 // This listens whenever a new player joins
 io.on("connection", (socket) => {
@@ -50,10 +72,19 @@ io.on("connection", (socket) => {
     // Notify all players about the new connection
     io.emit("playerUpdate", players);
 
+    // Start the timer when both players join
+    if (Object.keys(players).length === 2) {
+        startTimer();
+    }
+
     socket.on("move", (move) => {
-        console.log("Move received");
         console.log(move);
         socket.broadcast.emit("move", move);
+
+        // Switch turn and restart the timer
+        currentTurn = currentTurn === "white" ? "black" : "white";
+        startTimer();
+        io.emit("switchTurn", currentTurn);
     });
 
     socket.on("disconnect", () => {
@@ -63,6 +94,9 @@ io.on("connection", (socket) => {
         }
 
         io.emit("Player Update", players);
+        if (Object.keys(players).length < 2) {
+            clearInterval(activeTimer); // Stop timer if a player leaves
+        }
     });
 });
 

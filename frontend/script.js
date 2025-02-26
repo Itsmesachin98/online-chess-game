@@ -4,42 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let playerName;
     let playerColor;
-    let whiteTime = 600;
-    let blackTime = 600;
-    let activeTimer = null;
-    let currentTurn = "white";
 
-    function updateTimerDisplay() {
-        document.getElementById("timer-bottom").innerText =
-            formatTime(whiteTime);
-        document.getElementById("timer-top").innerText = formatTime(blackTime);
-    }
-
+    // This formats the time
     function formatTime(time) {
         let minutes = Math.floor(time / 60);
         let seconds = time % 60;
         return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    }
-
-    function startTimer(color) {
-        if (activeTimer) clearInterval(activeTimer);
-
-        activeTimer = setInterval(() => {
-            if (color === "white") {
-                whiteTime--;
-                if (whiteTime <= 0) {
-                    clearInterval(activeTimer);
-                    alert("Black wins! White ran out of time.");
-                }
-            } else {
-                blackTime--;
-                if (blackTime <= 0) {
-                    clearInterval(activeTimer);
-                    alert("White wins! Black ran out of time.");
-                }
-            }
-            updateTimerDisplay();
-        }, 1000);
     }
 
     socket.on("playerInfo", (info) => {
@@ -63,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("player-top").innerText =
                         "Player Two";
 
-                    document.getElementById("timer-bottom").innerText = "10:0";
+                    document.getElementById("timer-bottom").innerText = "10:00";
                     document.getElementById("timer-top").innerText = "10:00";
                 } else {
                     document.getElementById("player-bottom").innerText =
@@ -72,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Player One";
 
                     document.getElementById("timer-bottom").innerText = "10:00";
-                    document.getElementById("timer-top").innerText = "10:0";
+                    document.getElementById("timer-top").innerText = "10:00";
                 }
             } else if (whitePlayer) {
                 document.getElementById("player-bottom").innerText =
@@ -80,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("player-top").innerText =
                     "Waiting for player";
 
-                document.getElementById("timer-bottom").innerText = "10:0";
+                document.getElementById("timer-bottom").innerText = "10:00";
                 document.getElementById("timer-top").innerText = "10:00";
             } else if (blackPlayer) {
                 document.getElementById("player-bottom").innerText =
@@ -89,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Waiting for player";
 
                 document.getElementById("timer-bottom").innerText = "10:00";
-                document.getElementById("timer-top").innerText = "10:0";
+                document.getElementById("timer-top").innerText = "10:00";
             }
         });
 
@@ -105,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         board = Chessboard("chessboard", config);
         updateStatus();
-        startTimer("white");
     });
 
     var board;
@@ -170,18 +139,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     socket.on("move", (move) => {
-        console.log("Received move", move);
         game.move(move);
         board.position(game.fen());
         updateStatus();
+    });
 
-        // Switch timers on move
-        if (currentTurn === "white") {
-            startTimer("black");
-            currentTurn = "black";
+    socket.on("timerUpdate", (timers) => {
+        if (playerColor === "white") {
+            document.getElementById("timer-bottom").innerText = formatTime(
+                timers.white
+            );
+            document.getElementById("timer-top").innerText = formatTime(
+                timers.black
+            );
         } else {
-            startTimer("white");
-            currentTurn = "white";
+            document.getElementById("timer-bottom").innerText = formatTime(
+                timers.black
+            );
+            document.getElementById("timer-top").innerText = formatTime(
+                timers.white
+            );
         }
+    });
+
+    socket.on("gameOver", (winner) => {
+        alert(`${winner} wins by time!`);
     });
 });
