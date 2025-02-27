@@ -20,6 +20,7 @@ let timers = {
     black: 600,
 };
 
+let isGameOn = false;
 let activeTimer = null;
 let currentTurn = "white";
 
@@ -74,7 +75,12 @@ io.on("connection", (socket) => {
 
     // Start the timer when both players join
     if (Object.keys(players).length === 2) {
-        startTimer();
+        // Start the timer when a move is made. Don't just start it immediately
+        socket.on("gameStatus", (status) => {
+            isGameOn = status;
+        });
+
+        if (isGameOn) startTimer();
     }
 
     socket.on("move", (move) => {

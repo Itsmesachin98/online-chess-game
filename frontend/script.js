@@ -4,6 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let playerName;
     let playerColor;
+    let isGameOn = false;
+
+    function startGame() {
+        isGameOn = true;
+        socket.emit("gameStatus", isGameOn);
+    }
 
     // This formats the time
     function formatTime(time) {
@@ -142,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
         game.move(move);
         board.position(game.fen());
         updateStatus();
+        startGame();
     });
 
     socket.on("timerUpdate", (timers) => {
