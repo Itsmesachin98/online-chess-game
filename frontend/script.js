@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let playerName;
     let playerColor;
+    let hasBothPlayersJoined = false;
     let isGameOn = false;
 
     function startGame() {
@@ -25,6 +26,13 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Name:", playerName, "|", "Color:", playerColor);
 
         socket.on("playerUpdate", (players) => {
+            // When both players join the game, only then can the players make a move.
+            if (Object.keys(players).length < 2) {
+                if (!isGameOn) hasBothPlayersJoined = false;
+            } else {
+                hasBothPlayersJoined = true;
+            }
+
             let whitePlayer = Object.values(players).find(
                 (player) => player.color === "white"
             );
@@ -88,9 +96,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function onDragStart(__, piece) {
         // Prevent moving the piece when the game is over
+        console.log(hasBothPlayersJoined);
         if (game.game_over()) return false;
+        if (!hasBothPlayersJoined) return false;
 
-        console.log(playerColor);
+        // console.log(playerColor);
 
         // Prevent moving opponent's pieces
         if (

@@ -20,6 +20,7 @@ let timers = {
     black: 600,
 };
 
+let bothPlayersOnline = false;
 let isGameOn = false;
 let activeTimer = null;
 let currentTurn = "white";
@@ -39,7 +40,7 @@ function startTimer() {
     }, 1000);
 }
 
-// This listens whenever a new player joins
+// Fires whenever a new player connects
 io.on("connection", (socket) => {
     let playerId = socket.id;
     let playerName;
@@ -90,16 +91,17 @@ io.on("connection", (socket) => {
         // Switch turn and restart the timer
         currentTurn = currentTurn === "white" ? "black" : "white";
         startTimer();
-        io.emit("switchTurn", currentTurn);
     });
 
+    // Fires whenever a player disconnects
     socket.on("disconnect", () => {
         console.log("A player disconnected", socket.id);
         if (players[socket.id]) {
             delete players[socket.id];
         }
 
-        io.emit("Player Update", players);
+        io.emit("playerUpdate", players);
+
         if (Object.keys(players).length < 2) {
             clearInterval(activeTimer); // Stop timer if a player leaves
         }
