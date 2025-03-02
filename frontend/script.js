@@ -7,11 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let hasBothPlayersJoined = false;
     let isGameOn = false;
 
-    function startGame() {
-        isGameOn = true;
-        socket.emit("gameStatus", isGameOn);
-    }
-
     // This formats the time
     function formatTime(time) {
         let minutes = Math.floor(time / 60);
@@ -77,18 +72,27 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        var config = {
-            draggable: true,
-            pieceTheme:
-                "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
-            position: "start",
-            onDragStart: onDragStart,
-            onDrop: onDrop,
-            orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
-        };
+        socket.on("gameState", (state) => {
+            game.load(state);
 
-        board = Chessboard("chessboard", config);
-        updateStatus();
+            var config = {
+                draggable: true,
+                pieceTheme:
+                    "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
+                position: state,
+                onDragStart: onDragStart,
+                onDrop: onDrop,
+                orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
+            };
+
+            if (!board) {
+                board = Chessboard("chessboard", config); // Initialize board if not already
+            } else {
+                board.position(state); // Update the existing board
+            }
+
+            updateStatus();
+        });
     });
 
     var board;
@@ -96,11 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function onDragStart(__, piece) {
         // Prevent moving the piece when the game is over
-        console.log(hasBothPlayersJoined);
         if (game.game_over()) return false;
         if (!hasBothPlayersJoined) return false;
-
-        // console.log(playerColor);
 
         // Prevent moving opponent's pieces
         if (
@@ -127,6 +128,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (move === null) return "snapback"; // Invalid move, return piece to original position
+        // gameFEN = game.fen();
+        move.fen = game.fen();
 
         // Send the move to the server
         socket.emit("move", move);
@@ -152,6 +155,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         document.getElementById("status").innerText = status;
+    }
+
+    function startGame() {
+        isGameOn = true;
+        socket.emit("gameStatus", isGameOn);
     }
 
     socket.on("move", (move) => {

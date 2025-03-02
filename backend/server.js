@@ -20,10 +20,10 @@ let timers = {
     black: 600,
 };
 
-let bothPlayersOnline = false;
 let isGameOn = false;
 let activeTimer = null;
 let currentTurn = "white";
+let gameFen = "start";
 
 // Function to start the timer
 function startTimer() {
@@ -66,10 +66,11 @@ io.on("connection", (socket) => {
     }
 
     players[playerId] = { name: playerName, color: playerColor };
-    console.log(players);
 
     // Notify the player of their assigned color
     socket.emit("playerInfo", { name: playerName, color: playerColor });
+
+    socket.emit("gameState", gameFen);
 
     // Notify all players about the new connection
     io.emit("playerUpdate", players);
@@ -85,7 +86,7 @@ io.on("connection", (socket) => {
     }
 
     socket.on("move", (move) => {
-        console.log(move);
+        gameFen = move.fen;
         socket.broadcast.emit("move", move);
 
         // Switch turn and restart the timer
@@ -95,7 +96,6 @@ io.on("connection", (socket) => {
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
-        console.log("A player disconnected", socket.id);
         if (players[socket.id]) {
             delete players[socket.id];
         }
