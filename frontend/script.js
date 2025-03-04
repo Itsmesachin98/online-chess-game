@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const socket = io("http://localhost:3000");
+    const socket = io("https://online-chess-game-shwe.onrender.com");
     console.log("Connected to server");
 
     let playerName;
