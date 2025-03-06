@@ -1,11 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
     const socket = io("https://online-chess-game-shwe.onrender.com");
+    // const socket = io("http://localhost:3000");
     console.log("Connected to server");
 
+    const playerTop = document.getElementById("player-top");
+    const playerBottom = document.getElementById("player-bottom");
+    const timerTop = document.getElementById("timer-top");
+    const timerBottom = document.getElementById("timer-bottom");
+    const createGameBtn = document.getElementById("createGameBtn");
+    const joinGameBtn = document.getElementById("joinGameBtn");
+
+    let gameId;
     let playerName;
     let playerColor;
-    let hasBothPlayersJoined = false;
     let isGameOn = false;
+    let hasBothPlayersJoined = false;
+
+    function createGame() {
+        socket.emit("createGame");
+    }
+
+    function joinGame(id) {
+        gameId = id;
+        socket.emit("joinGame", gameId);
+    }
 
     // This formats the time
     function formatTime(time) {
@@ -19,84 +37,88 @@ document.addEventListener("DOMContentLoaded", function () {
         playerColor = info.color;
 
         console.log("Name:", playerName, "|", "Color:", playerColor);
+    });
 
-        socket.on("playerUpdate", (players) => {
-            // When both players join the game, only then can the players make a move.
-            if (Object.keys(players).length < 2) {
-                if (!isGameOn) hasBothPlayersJoined = false;
+    socket.on("playerUpdate", (players) => {
+        // When both players join the game, only then can the players make a move.
+        if (Object.keys(players).length < 2) {
+            if (!isGameOn) hasBothPlayersJoined = false;
+        } else {
+            hasBothPlayersJoined = true;
+        }
+
+        let whitePlayer = Object.values(players).find(
+            (player) => player.color === "white"
+        );
+        let blackPlayer = Object.values(players).find(
+            (player) => player.color === "black"
+        );
+
+        if (whitePlayer && blackPlayer) {
+            if (playerColor === "white") {
+                playerBottom.innerText = "Player One";
+                playerTop.innerText = "Player Two";
+
+                timerBottom.innerText = "10:00";
+                timerTop.innerText = "10:00";
             } else {
-                hasBothPlayersJoined = true;
+                playerBottom.innerText = "Player Two";
+                playerTop.innerText = "Player One";
+
+                timerBottom.innerText = "10:00";
+                timerTop.innerText = "10:00";
             }
+        } else if (whitePlayer) {
+            playerBottom.innerText = "Player One";
+            playerTop.innerText = "Waiting for player";
 
-            let whitePlayer = Object.values(players).find(
-                (player) => player.color === "white"
-            );
-            let blackPlayer = Object.values(players).find(
-                (player) => player.color === "black"
-            );
+            timerBottom.innerText = "10:00";
+            timerTop.innerText = "10:00";
+        } else if (blackPlayer) {
+            playerBottom.innerText = "Player Two";
+            playerTop.innerText = "Waiting for player";
 
-            if (whitePlayer && blackPlayer) {
-                if (playerColor === "white") {
-                    document.getElementById("player-bottom").innerText =
-                        "Player One";
-                    document.getElementById("player-top").innerText =
-                        "Player Two";
+            timerBottom.innerText = "10:00";
+            timerTop.innerText = "10:00";
+        }
+    });
 
-                    document.getElementById("timer-bottom").innerText = "10:00";
-                    document.getElementById("timer-top").innerText = "10:00";
-                } else {
-                    document.getElementById("player-bottom").innerText =
-                        "Player Two";
-                    document.getElementById("player-top").innerText =
-                        "Player One";
+    socket.on("gameState", (state) => {
+        game.load(state);
 
-                    document.getElementById("timer-bottom").innerText = "10:00";
-                    document.getElementById("timer-top").innerText = "10:00";
-                }
-            } else if (whitePlayer) {
-                document.getElementById("player-bottom").innerText =
-                    "Player One";
-                document.getElementById("player-top").innerText =
-                    "Waiting for player";
+        var config = {
+            draggable: true,
+            pieceTheme:
+                "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
+            position: state,
+            onDragStart: onDragStart,
+            onDrop: onDrop,
+            orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
+        };
 
-                document.getElementById("timer-bottom").innerText = "10:00";
-                document.getElementById("timer-top").innerText = "10:00";
-            } else if (blackPlayer) {
-                document.getElementById("player-bottom").innerText =
-                    "Player Two";
-                document.getElementById("player-top").innerText =
-                    "Waiting for player";
+        if (!board) {
+            board = Chessboard("chessboard", config); // Initialize board if not already
+        } else {
+            board.position(state); // Update the existing board
+        }
 
-                document.getElementById("timer-bottom").innerText = "10:00";
-                document.getElementById("timer-top").innerText = "10:00";
-            }
-        });
-
-        socket.on("gameState", (state) => {
-            game.load(state);
-
-            var config = {
-                draggable: true,
-                pieceTheme:
-                    "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
-                position: state,
-                onDragStart: onDragStart,
-                onDrop: onDrop,
-                orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
-            };
-
-            if (!board) {
-                board = Chessboard("chessboard", config); // Initialize board if not already
-            } else {
-                board.position(state); // Update the existing board
-            }
-
-            updateStatus();
-        });
+        updateStatus();
     });
 
     var board;
     var game = new Chess(); // Creates a new chess game instance
+
+    var config = {
+        draggable: true,
+        pieceTheme:
+            "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
+        position: "start",
+        onDragStart: onDragStart,
+        onDrop: onDrop,
+        orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
+    };
+
+    board = Chessboard("chessboard", config); // Initialize board if not already
 
     function onDragStart(__, piece) {
         // Prevent moving the piece when the game is over
@@ -128,11 +150,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (move === null) return "snapback"; // Invalid move, return piece to original position
-        // gameFEN = game.fen();
         move.fen = game.fen();
 
         // Send the move to the server
-        socket.emit("move", move);
+        socket.emit("move", { gameId, move });
 
         updateStatus();
     }
@@ -162,6 +183,12 @@ document.addEventListener("DOMContentLoaded", function () {
         socket.emit("gameStatus", isGameOn);
     }
 
+    socket.on("gameCreated", ({ gameId, link }) => {
+        const gameUrl = `${window.location.origin}?gameId=${gameId}`;
+        alert(`Game Created!\nGame ID: ${gameId}\nShare this link: ${gameUrl}`);
+        console.log(gameUrl);
+    });
+
     socket.on("move", (move) => {
         game.move(move);
         board.position(game.fen());
@@ -171,23 +198,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.on("timerUpdate", (timers) => {
         if (playerColor === "white") {
-            document.getElementById("timer-bottom").innerText = formatTime(
-                timers.white
-            );
-            document.getElementById("timer-top").innerText = formatTime(
-                timers.black
-            );
+            timerBottom.innerText = formatTime(timers.white);
+            timerTop.innerText = formatTime(timers.black);
         } else {
-            document.getElementById("timer-bottom").innerText = formatTime(
-                timers.black
-            );
-            document.getElementById("timer-top").innerText = formatTime(
-                timers.white
-            );
+            timerBottom.innerText = formatTime(timers.black);
+            timerTop.innerText = formatTime(timers.white);
         }
     });
 
     socket.on("gameOver", (winner) => {
         alert(`${winner} wins by time!`);
+    });
+
+    createGameBtn.addEventListener("click", () => {
+        createGame();
+    });
+    joinGameBtn.addEventListener("click", () => {
+        let id = prompt("Enter game ID:");
+        joinGame(id);
     });
 });

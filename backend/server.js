@@ -2,12 +2,14 @@ const express = require("express");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
         origin: "https://onlinechessgame.vercel.app",
+        // origin: "*",
         methods: ["GET", "POST"],
         credentials: true,
     },
@@ -15,96 +17,127 @@ const io = new Server(server, {
 
 app.use(cors());
 
-let players = {}; // Stores socket ids with assigned name & color
-let timers = {
-    white: 600,
-    black: 600,
-};
+let games = {}; // Stores game data with gameId as key
 
-let isGameOn = false;
-let activeTimer = null;
-let currentTurn = "white";
-let gameFen = "start";
+// Function to reset a game
+function resetGame(gameId) {
+    if (games[gameId]) {
+        games[gameId].gameFen = "start";
+        games[gameId].isGameOn = false;
+        games[gameId].timers = { white: 600, black: 600 };
+        clearInterval(games[gameId].activeTimer);
+        games[gameId].activeTimer = null;
+        games[gameId].currentTurn = "white";
+    }
+}
 
 // Function to start the timer
-function startTimer() {
-    if (activeTimer) clearInterval(activeTimer);
+function startTimer(gameId) {
+    let game = games[gameId];
+    if (!game) return;
 
-    activeTimer = setInterval(() => {
-        if (timers[currentTurn] > 0) {
-            timers[currentTurn]--;
-            io.emit("timerUpdate", timers); // Send updated time to clients
+    if (game.activeTimer) clearInterval(game.activeTimer);
+
+    game.activeTimer = setInterval(() => {
+        if (game.timers[game.currentTurn] > 0) {
+            game.timers[game.currentTurn]--;
+            io.to(gameId).emit("timerUpdate", game.timers);
         } else {
-            clearInterval(activeTimer);
-            io.emit("gameOver", currentTurn === "white" ? "black" : "white");
+            clearInterval(game.activeTimer);
+            io.to(gameId).emit(
+                "gameOver",
+                game.currentTurn === "white" ? "black" : "white"
+            );
+            resetGame(gameId);
+            io.to(gameId).emit("gameState", "start");
         }
     }, 1000);
 }
 
-// Fires whenever a new player connects
+// Handle new connections
 io.on("connection", (socket) => {
-    let playerId = socket.id;
-    let playerName;
-    let playerColor;
+    socket.on("createGame", () => {
+        let gameId = uuidv4(); // Generate a unique game ID
+        games[gameId] = {
+            players: {},
+            gameFen: "start",
+            isGameOn: false,
+            timers: { white: 600, black: 600 },
+            activeTimer: null,
+            currentTurn: "white",
+        };
+        // socket.emit("gameCreated", gameId);
 
-    const takenNames = Object.values(players).map((player) => player.name);
-
-    if (Object.keys(players).length === 0) {
-        // First player joins
-        playerName = "Player One";
-        playerColor = "white";
-    } else if (Object.keys(players).length === 1) {
-        // Checks if "white" is taken or not
-        playerName = takenNames.includes("Player One")
-            ? "Player Two"
-            : "Player One";
-        playerColor = takenNames.includes("Player One") ? "black" : "white";
-    } else {
-        // Game room is full
-        socket.emit("full", "Game room is full. Try again later.");
-        socket.disconnect();
-        return; // Prevents further execution
-    }
-
-    players[playerId] = { name: playerName, color: playerColor };
-
-    // Notify the player of their assigned color
-    socket.emit("playerInfo", { name: playerName, color: playerColor });
-
-    socket.emit("gameState", gameFen);
-
-    // Notify all players about the new connection
-    io.emit("playerUpdate", players);
-
-    // Start the timer when both players join
-    if (Object.keys(players).length === 2) {
-        // Start the timer when a move is made. Don't just start it immediately
-        socket.on("gameStatus", (status) => {
-            isGameOn = status;
+        socket.emit("gameCreated", {
+            gameId,
+            link: `https://onlinechessgame.vercel.app/?gameId=${gameId}`,
+            // link: `http://127.0.0.1:5500/frontend/index.html/gameId=${gameId}`,
         });
+    });
 
-        if (isGameOn) startTimer();
-    }
+    socket.on("joinGame", (gameId) => {
+        if (!games[gameId]) {
+            socket.emit("error", "Invalid game ID");
+            return;
+        }
 
-    socket.on("move", (move) => {
-        gameFen = move.fen;
-        socket.broadcast.emit("move", move);
+        let game = games[gameId];
 
-        // Switch turn and restart the timer
-        currentTurn = currentTurn === "white" ? "black" : "white";
-        startTimer();
+        if (Object.keys(game.players).length >= 2) {
+            socket.emit("full", "Game room is full. Try another.");
+            return;
+        }
+
+        let playerId = socket.id;
+        let playerName, playerColor;
+
+        const takenColors = Object.values(game.players).map((p) => p.color);
+        if (!takenColors.includes("white")) {
+            playerName = "Player One";
+            playerColor = "white";
+        } else {
+            playerName = "Player Two";
+            playerColor = "black";
+        }
+
+        game.players[playerId] = { name: playerName, color: playerColor };
+
+        socket.join(gameId);
+        socket.emit("playerInfo", { name: playerName, color: playerColor });
+        io.to(gameId).emit("playerUpdate", game.players);
+        socket.emit("gameState", game.gameFen);
+
+        if (Object.keys(game.players).length === 2) {
+            game.isGameOn = true;
+            startTimer(gameId);
+        }
+    });
+
+    socket.on("move", ({ gameId, move }) => {
+        let game = games[gameId];
+        if (!game) return;
+
+        game.gameFen = move.fen;
+        socket.broadcast.to(gameId).emit("move", move);
+
+        game.currentTurn = game.currentTurn === "white" ? "black" : "white";
+        startTimer(gameId);
     });
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
-        if (players[socket.id]) {
-            delete players[socket.id];
-        }
+        for (let gameId in games) {
+            let game = games[gameId];
+            if (game.players[socket.id]) {
+                delete game.players[socket.id];
+                io.to(gameId).emit("playerUpdate", game.players);
+            }
 
-        io.emit("playerUpdate", players);
-
-        if (Object.keys(players).length < 2) {
-            clearInterval(activeTimer); // Stop timer if a player leaves
+            if (Object.keys(game.players).length === 0) {
+                delete games[gameId]; // Clean up empty game rooms
+            } else if (Object.keys(game.players).length < 2) {
+                clearInterval(game.activeTimer);
+            }
         }
     });
 });
@@ -112,4 +145,5 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    // console.log(`Server running on http://localhost:${PORT}`);
 });
