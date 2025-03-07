@@ -1,3 +1,4 @@
 {
-    "routes": [{ "src": "/gamearena", "dest": "/gamearena.html" }]
+    "public": "frontend",
+    "rewrites": [{ "source": "/gamearena", "destination": "/gamearena.html" }]
 }
