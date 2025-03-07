@@ -1,4 +1,5 @@
 {
-    "public": "frontend",
-    "rewrites": [{ "source": "/gamearena", "destination": "/gamearena.html" }]
+    "projectSettings": {
+        "outputDirectory": "frontend"
+    }
 }
