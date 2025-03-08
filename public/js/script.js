@@ -12,10 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
     createGameBtn.addEventListener("click", async () => {
         const response = await fetch(
             "https://online-chess-game-shwe.onrender.com/createGame"
+            // "http://localhost:3000/createGame"
         );
         const data = await response.json();
         // window.location.href = `/gamearena/${data.gameId}`;
-        const gameLink = `https://onlinechessgame.vercel.app/gamearena/${data.gameId}`;
+        gameLink = `https://onlinechessgame.vercel.app/gamearena/${data.gameId}`;
 
         // Display game link
         gameLink.innerHTML = `Share this link: <a href="${gameLink}" target="_blank">${gameLink}</a>`;
