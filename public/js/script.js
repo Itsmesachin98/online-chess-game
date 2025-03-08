@@ -13,7 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
             "https://online-chess-game-shwe.onrender.com/createGame"
         );
         const data = await response.json();
-        window.location.href = `/gamearena/${data.gameId}`;
-        console.log(data);
+        // window.location.href = `/gamearena/${data.gameId}`;
+        const gameLink = `https://onlinechessgame.vercel.app/gamearena/${data.gameId}`;
+        // console.log(data);
+
+        // Display game link
+        document.getElementById(
+            "gameLink"
+        ).innerHTML = `Share this link: <a href="${gameLink}" target="_blank">${gameLink}</a>`;
     });
 });
