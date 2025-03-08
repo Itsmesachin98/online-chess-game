@@ -17,12 +17,12 @@ const io = new Server(server, {
 
 app.use(cors());
 
+let games = {}; // Stores game data with gameId as key
+
 app.get("/createGame", (req, res) => {
-    const gameId = uuidv4().slice(0, 8); // Generate short unique game ID
+    let gameId = uuidv4().slice(0, 8); // Generate short unique game ID
     res.json({ gameId });
 });
-
-let games = {}; // Stores game data with gameId as key
 
 // Function to reset a game
 function resetGame(gameId) {
@@ -71,7 +71,6 @@ io.on("connection", (socket) => {
             activeTimer: null,
             currentTurn: "white",
         };
-        // socket.emit("gameCreated", gameId);
 
         socket.emit("gameCreated", {
             gameId,

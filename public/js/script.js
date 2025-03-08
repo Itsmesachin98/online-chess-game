@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const createGameBtn = document.getElementById("createGameBtn");
+    const gameLink = document.getElementById("gameLink");
 
     var config = {
         pieceTheme:
@@ -15,11 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = await response.json();
         // window.location.href = `/gamearena/${data.gameId}`;
         const gameLink = `https://onlinechessgame.vercel.app/gamearena/${data.gameId}`;
-        // console.log(data);
 
         // Display game link
-        document.getElementById(
-            "gameLink"
-        ).innerHTML = `Share this link: <a href="${gameLink}" target="_blank">${gameLink}</a>`;
+        gameLink.innerHTML = `Share this link: <a href="${gameLink}" target="_blank">${gameLink}</a>`;
     });
 });
