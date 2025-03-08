@@ -8,7 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     var board1 = Chessboard("board1", config);
 
-    createGameBtn.addEventListener("click", () => {
-        console.log("I got clicked");
+    createGameBtn.addEventListener("click", async () => {
+        const response = await fetch(
+            "https://online-chess-game-shwe.onrender.com/createGame"
+        );
+        const data = await response.json();
+        window.location.href = `/gamearena/${data.gameId}`;
+        console.log(data);
     });
 });

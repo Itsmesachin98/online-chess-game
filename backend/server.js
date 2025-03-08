@@ -71,7 +71,7 @@ io.on("connection", (socket) => {
         socket.emit("gameCreated", {
             gameId,
             link: `https://onlinechessgame.vercel.app/?gameId=${gameId}`,
-            // link: `http://127.0.0.1:5500/frontend/index.html/gameId=${gameId}`,
+            // link: `http://127.0.0.1:5500/public/index.html/gameId=${gameId}`,
         });
     });
 
