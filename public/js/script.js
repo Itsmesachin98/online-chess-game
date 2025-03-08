@@ -10,15 +10,16 @@ document.addEventListener("DOMContentLoaded", function () {
     var board1 = Chessboard("board1", config);
 
     createGameBtn.addEventListener("click", async () => {
+        console.log("Create game button is clicked");
         const response = await fetch(
             "https://online-chess-game-shwe.onrender.com/createGame"
             // "http://localhost:3000/createGame"
         );
         const data = await response.json();
         // window.location.href = `/gamearena/${data.gameId}`;
-        gameLink = `https://onlinechessgame.vercel.app/gamearena/${data.gameId}`;
+        const link = `https://onlinechessgame.vercel.app/gamearena/${data.gameId}`;
 
         // Display game link
-        gameLink.innerHTML = `Share this link: <a href="${gameLink}" target="_blank">${gameLink}</a>`;
+        gameLink.innerHTML = `Share this link: <a href="${link}" target="_blank">${link}</a>`;
     });
 });
