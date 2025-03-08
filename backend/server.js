@@ -18,7 +18,7 @@ const io = new Server(server, {
 app.use(cors());
 
 app.get("/createGame", (req, res) => {
-    const gameId = uuidv4(); // Generate a unique game ID
+    const gameId = uuidv4().slice(0, 8); // Generate short unique game ID
     res.json({ gameId });
 });
 
