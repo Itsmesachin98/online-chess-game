@@ -17,6 +17,11 @@ const io = new Server(server, {
 
 app.use(cors());
 
+app.get("/createGame", (req, res) => {
+    const gameId = uuidv4(); // Generate a unique game ID
+    res.json({ gameId });
+});
+
 let games = {}; // Stores game data with gameId as key
 
 // Function to reset a game

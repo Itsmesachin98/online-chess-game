@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const playerBottom = document.getElementById("player-bottom");
     const timerTop = document.getElementById("timer-top");
     const timerBottom = document.getElementById("timer-bottom");
-    const createGameBtn = document.getElementById("createGameBtn");
-    const joinGameBtn = document.getElementById("joinGameBtn");
 
-    let gameId;
+    const gameId = window.location.pathname.split("/")[2];
+    socket.emit("joinGame", gameId);
+
     let playerName;
     let playerColor;
     let isGameOn = false;
@@ -208,13 +208,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.on("gameOver", (winner) => {
         alert(`${winner} wins by time!`);
-    });
-
-    createGameBtn.addEventListener("click", () => {
-        createGame();
-    });
-    joinGameBtn.addEventListener("click", () => {
-        let id = prompt("Enter game ID:");
-        joinGame(id);
     });
 });
