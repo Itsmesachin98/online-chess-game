@@ -17,8 +17,8 @@ app.use(
 
 const io = new Server(server, {
     cors: {
-        origin: "https://onlinechessgame.vercel.app",
-        // origin: "*",
+        // origin: "https://onlinechessgame.vercel.app",
+        origin: "*",
         methods: ["GET", "POST"],
         credentials: true,
     },
