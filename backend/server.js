@@ -15,6 +15,17 @@ app.use(
     })
 );
 
+app.use((req, res, next) => {
+    res.header(
+        "Access-Control-Allow-Origin",
+        "https://onlinechessgame.vercel.app"
+    );
+    res.header("Access-Control-Allow-Methods", "GET, POST");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+});
+
 const io = new Server(server, {
     cors: {
         // origin: "https://onlinechessgame.vercel.app",
