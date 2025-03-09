@@ -72,7 +72,7 @@ function startTimer(gameId) {
 io.on("connection", (socket) => {
     console.log(games);
     console.log("1st layer");
-    socket.on("joinGame", (gameId) => {
+    socket.on("joinGame", () => {
         console.log("2nd layer");
         if (games[gameId]) {
             console.log("3rd layer");
