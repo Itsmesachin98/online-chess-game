@@ -6,6 +6,15 @@ const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 
 const app = express();
 const server = createServer(app);
+
+app.use(
+    cors({
+        origin: "https://onlinechessgame.vercel.app",
+        methods: ["GET", "POST"],
+        credentials: true,
+    })
+);
+
 const io = new Server(server, {
     cors: {
         origin: "https://onlinechessgame.vercel.app",
