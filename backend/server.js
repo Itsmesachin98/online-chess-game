@@ -101,43 +101,44 @@ app.get("/createGame", (req, res) => {
 
 // Handle new connections
 io.on("connection", (socket) => {
-    socket.on("joinGame", () => {
-        if (games[gameId]) {
-            let game = games[gameId];
+    console.log(games);
+    if (games[gameId]) {
+        let game = games[gameId];
 
-            if (Object.keys(game.players).length >= 2) {
-                socket.emit("full", "Game room is full. Try another.");
-                return;
-            }
-
-            let playerId = socket.id;
-            let playerName, playerColor;
-
-            const takenColors = Object.values(game.players).map((p) => p.color);
-            if (!takenColors.includes("white")) {
-                playerName = "Player One";
-                playerColor = "white";
-            } else {
-                playerName = "Player Two";
-                playerColor = "black";
-            }
-
-            game.players[playerId] = { name: playerName, color: playerColor };
-
-            socket.join(gameId);
-            socket.emit("playerInfo", { name: playerName, color: playerColor });
-            io.to(gameId).emit("playerUpdate", game.players);
-            socket.emit("gameState", game.gameFen);
-
-            if (Object.keys(game.players).length === 2) {
-                game.isGameOn = true;
-                startTimer(gameId);
-            }
-        } else {
-            socket.emit("error", "Invalid game ID");
+        if (Object.keys(game.players).length >= 2) {
+            socket.emit("full", "Game room is full. Try another.");
             return;
         }
-    });
+
+        let playerId = socket.id;
+        let playerName, playerColor;
+
+        const takenColors = Object.values(game.players).map((p) => p.color);
+        if (!takenColors.includes("white")) {
+            playerName = "Player One";
+            playerColor = "white";
+        } else {
+            playerName = "Player Two";
+            playerColor = "black";
+        }
+
+        game.players[playerId] = { name: playerName, color: playerColor };
+
+        socket.join(gameId);
+        socket.emit("playerInfo", { name: playerName, color: playerColor });
+        io.to(gameId).emit("playerUpdate", game.players);
+        socket.emit("gameState", game.gameFen);
+
+        if (Object.keys(game.players).length === 2) {
+            game.isGameOn = true;
+            startTimer(gameId);
+        }
+    } else {
+        socket.emit("error", "Invalid game ID");
+        return;
+    }
+
+    // socket.on("joinGame", () => {});
 
     // socket.on("move", ({ gameId, move }) => {
     //     let game = games[gameId];
