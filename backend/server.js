@@ -20,16 +20,22 @@ app.use((req, res, next) => {
         "Access-Control-Allow-Origin",
         "https://onlinechessgame.vercel.app"
     );
-    res.header("Access-Control-Allow-Methods", "GET, POST");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
+
+    // Handle Preflight OPTIONS Request
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(204);
+    }
+
     next();
 });
 
 const io = new Server(server, {
     cors: {
-        // origin: "https://onlinechessgame.vercel.app",
-        origin: "*",
+        origin: "https://onlinechessgame.vercel.app",
+        // origin: "*",
         methods: ["GET", "POST"],
         credentials: true,
     },
@@ -38,6 +44,11 @@ const io = new Server(server, {
 app.use(cors());
 
 let games = {}; // Stores game data with gameId as key
+
+// Test Route to Check if Server is Running
+app.get("/", (req, res) => {
+    res.send("Server is running!");
+});
 
 app.get("/createGame", (req, res) => {
     let gameId = uuidv4().slice(0, 8); // Generate short unique game ID
