@@ -13,11 +13,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const timerTop = document.getElementById("timer-top");
     const timerBottom = document.getElementById("timer-bottom");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const gameId = urlParams.get("gameId");
-    socket.emit("joinGame", gameId);
-
+    const pathname = window.location.pathname;
+    const gameId = pathname.split("/").pop();
     console.log("This is game id", gameId);
+    socket.emit("joinGame", gameId);
 
     let playerName;
     let playerColor;
