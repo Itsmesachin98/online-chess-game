@@ -70,26 +70,12 @@ function startTimer(gameId) {
 
 // Handle new connections
 io.on("connection", (socket) => {
-    // socket.on("createGame", () => {
-    //     let gameId = uuidv4(); // Generate a unique game ID
-    //     games[gameId] = {
-    //         players: {},
-    //         gameFen: "start",
-    //         isGameOn: false,
-    //         timers: { white: 600, black: 600 },
-    //         activeTimer: null,
-    //         currentTurn: "white",
-    //     };
-
-    //     socket.emit("gameCreated", {
-    //         gameId,
-    //         link: `https://onlinechessgame.vercel.app/?gameId=${gameId}`,
-    //         // link: `http://127.0.0.1:5500/public/index.html/gameId=${gameId}`,
-    //     });
-    // });
-
+    console.log(games);
+    console.log("1st layer");
     socket.on("joinGame", (gameId) => {
+        console.log("2nd layer");
         if (games[gameId]) {
+            console.log("3rd layer");
             let game = games[gameId];
 
             if (Object.keys(game.players).length >= 2) {
