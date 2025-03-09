@@ -21,6 +21,15 @@ let games = {}; // Stores game data with gameId as key
 
 app.get("/createGame", (req, res) => {
     let gameId = uuidv4().slice(0, 8); // Generate short unique game ID
+    games[gameId] = {
+        players: {},
+        gameFen: "start",
+        isGameOn: false,
+        timers: { white: 600, black: 600 },
+        activeTimer: null,
+        currentTurn: "white",
+    };
+
     res.json({ gameId });
 });
 
@@ -61,59 +70,59 @@ function startTimer(gameId) {
 
 // Handle new connections
 io.on("connection", (socket) => {
-    socket.on("createGame", () => {
-        let gameId = uuidv4(); // Generate a unique game ID
-        games[gameId] = {
-            players: {},
-            gameFen: "start",
-            isGameOn: false,
-            timers: { white: 600, black: 600 },
-            activeTimer: null,
-            currentTurn: "white",
-        };
+    // socket.on("createGame", () => {
+    //     let gameId = uuidv4(); // Generate a unique game ID
+    //     games[gameId] = {
+    //         players: {},
+    //         gameFen: "start",
+    //         isGameOn: false,
+    //         timers: { white: 600, black: 600 },
+    //         activeTimer: null,
+    //         currentTurn: "white",
+    //     };
 
-        socket.emit("gameCreated", {
-            gameId,
-            link: `https://onlinechessgame.vercel.app/?gameId=${gameId}`,
-            // link: `http://127.0.0.1:5500/public/index.html/gameId=${gameId}`,
-        });
-    });
+    //     socket.emit("gameCreated", {
+    //         gameId,
+    //         link: `https://onlinechessgame.vercel.app/?gameId=${gameId}`,
+    //         // link: `http://127.0.0.1:5500/public/index.html/gameId=${gameId}`,
+    //     });
+    // });
 
     socket.on("joinGame", (gameId) => {
-        if (!games[gameId]) {
+        if (games[gameId]) {
+            let game = games[gameId];
+
+            if (Object.keys(game.players).length >= 2) {
+                socket.emit("full", "Game room is full. Try another.");
+                return;
+            }
+
+            let playerId = socket.id;
+            let playerName, playerColor;
+
+            const takenColors = Object.values(game.players).map((p) => p.color);
+            if (!takenColors.includes("white")) {
+                playerName = "Player One";
+                playerColor = "white";
+            } else {
+                playerName = "Player Two";
+                playerColor = "black";
+            }
+
+            game.players[playerId] = { name: playerName, color: playerColor };
+
+            socket.join(gameId);
+            socket.emit("playerInfo", { name: playerName, color: playerColor });
+            io.to(gameId).emit("playerUpdate", game.players);
+            socket.emit("gameState", game.gameFen);
+
+            if (Object.keys(game.players).length === 2) {
+                game.isGameOn = true;
+                startTimer(gameId);
+            }
+        } else {
             socket.emit("error", "Invalid game ID");
             return;
-        }
-
-        let game = games[gameId];
-
-        if (Object.keys(game.players).length >= 2) {
-            socket.emit("full", "Game room is full. Try another.");
-            return;
-        }
-
-        let playerId = socket.id;
-        let playerName, playerColor;
-
-        const takenColors = Object.values(game.players).map((p) => p.color);
-        if (!takenColors.includes("white")) {
-            playerName = "Player One";
-            playerColor = "white";
-        } else {
-            playerName = "Player Two";
-            playerColor = "black";
-        }
-
-        game.players[playerId] = { name: playerName, color: playerColor };
-
-        socket.join(gameId);
-        socket.emit("playerInfo", { name: playerName, color: playerColor });
-        io.to(gameId).emit("playerUpdate", game.players);
-        socket.emit("gameState", game.gameFen);
-
-        if (Object.keys(game.players).length === 2) {
-            game.isGameOn = true;
-            startTimer(gameId);
         }
     });
 

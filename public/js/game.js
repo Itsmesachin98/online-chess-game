@@ -8,22 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const timerTop = document.getElementById("timer-top");
     const timerBottom = document.getElementById("timer-bottom");
 
-    const gameId = window.location.pathname.split("/")[2];
-    socket.emit("joinGame", gameId);
+    socket.emit("joinGame");
 
     let playerName;
     let playerColor;
     let isGameOn = false;
     let hasBothPlayersJoined = false;
-
-    function createGame() {
-        socket.emit("createGame");
-    }
-
-    function joinGame(id) {
-        gameId = id;
-        socket.emit("joinGame", gameId);
-    }
 
     // This formats the time
     function formatTime(time) {
