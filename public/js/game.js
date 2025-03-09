@@ -13,7 +13,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const timerTop = document.getElementById("timer-top");
     const timerBottom = document.getElementById("timer-bottom");
 
-    socket.emit("joinGame");
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameId = urlParams.get("gameId");
+    socket.emit("joinGame", gameId);
+
+    console.log(gameId);
 
     let playerName;
     let playerColor;
