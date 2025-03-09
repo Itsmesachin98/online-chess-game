@@ -43,49 +43,45 @@ app.get("/createGame", (req, res) => {
 });
 
 // Function to reset a game
-function resetGame(gameId) {
-    if (games[gameId]) {
-        games[gameId].gameFen = "start";
-        games[gameId].isGameOn = false;
-        games[gameId].timers = { white: 600, black: 600 };
-        clearInterval(games[gameId].activeTimer);
-        games[gameId].activeTimer = null;
-        games[gameId].currentTurn = "white";
-    }
-}
+// function resetGame(gameId) {
+//     if (games[gameId]) {
+//         games[gameId].gameFen = "start";
+//         games[gameId].isGameOn = false;
+//         games[gameId].timers = { white: 600, black: 600 };
+//         clearInterval(games[gameId].activeTimer);
+//         games[gameId].activeTimer = null;
+//         games[gameId].currentTurn = "white";
+//     }
+// }
 
 // Function to start the timer
-function startTimer(gameId) {
-    let game = games[gameId];
-    if (!game) return;
+// function startTimer(gameId) {
+//     let game = games[gameId];
+//     if (!game) return;
 
-    if (game.activeTimer) clearInterval(game.activeTimer);
+//     if (game.activeTimer) clearInterval(game.activeTimer);
 
-    game.activeTimer = setInterval(() => {
-        if (game.timers[game.currentTurn] > 0) {
-            game.timers[game.currentTurn]--;
-            io.to(gameId).emit("timerUpdate", game.timers);
-        } else {
-            clearInterval(game.activeTimer);
-            io.to(gameId).emit(
-                "gameOver",
-                game.currentTurn === "white" ? "black" : "white"
-            );
-            resetGame(gameId);
-            io.to(gameId).emit("gameState", "start");
-        }
-    }, 1000);
-}
+//     game.activeTimer = setInterval(() => {
+//         if (game.timers[game.currentTurn] > 0) {
+//             game.timers[game.currentTurn]--;
+//             io.to(gameId).emit("timerUpdate", game.timers);
+//         } else {
+//             clearInterval(game.activeTimer);
+//             io.to(gameId).emit(
+//                 "gameOver",
+//                 game.currentTurn === "white" ? "black" : "white"
+//             );
+//             resetGame(gameId);
+//             io.to(gameId).emit("gameState", "start");
+//         }
+//     }, 1000);
+// }
 
 // Handle new connections
 io.on("connection", (socket) => {
-    console.log(games);
-    console.log("1st layer");
     socket.on("joinGame", () => {
-        console.log("2nd layer");
         if (games[gameId]) {
-            console.log("3rd layer");
-            let game = games[gameId];
+            let game = games.gameId;
 
             if (Object.keys(game.players).length >= 2) {
                 socket.emit("full", "Game room is full. Try another.");
@@ -121,16 +117,16 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("move", ({ gameId, move }) => {
-        let game = games[gameId];
-        if (!game) return;
+    // socket.on("move", ({ gameId, move }) => {
+    //     let game = games[gameId];
+    //     if (!game) return;
 
-        game.gameFen = move.fen;
-        socket.broadcast.to(gameId).emit("move", move);
+    //     game.gameFen = move.fen;
+    //     socket.broadcast.to(gameId).emit("move", move);
 
-        game.currentTurn = game.currentTurn === "white" ? "black" : "white";
-        startTimer(gameId);
-    });
+    //     game.currentTurn = game.currentTurn === "white" ? "black" : "white";
+    //     startTimer(gameId);
+    // });
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
