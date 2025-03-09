@@ -103,7 +103,7 @@ app.get("/createGame", (req, res) => {
 io.on("connection", (socket) => {
     socket.on("joinGame", () => {
         if (games[gameId]) {
-            let game = games.gameId;
+            let game = games[gameId];
 
             if (Object.keys(game.players).length >= 2) {
                 socket.emit("full", "Game room is full. Try another.");
