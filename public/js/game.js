@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const gameId = urlParams.get("gameId");
     socket.emit("joinGame", gameId);
 
-    console.log(gameId);
+    console.log("This is game id", gameId);
 
     let playerName;
     let playerColor;

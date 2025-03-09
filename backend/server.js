@@ -103,6 +103,7 @@ app.get("/createGame", (req, res) => {
 io.on("connection", (socket) => {
     console.log(games);
     socket.on("joinGame", (gameId) => {
+        console.log("This is game id", gameId);
         if (games[gameId]) {
             let game = games[gameId];
 
