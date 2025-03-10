@@ -154,8 +154,11 @@ io.on("connection", (socket) => {
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
+        console.log("I got disconnected");
         for (let gameId in games) {
             let game = games[gameId];
+            console.log(games);
+            console.log("game", game);
             if (game.players[socket.id]) {
                 delete game.players[socket.id];
                 io.to(gameId).emit("playerUpdate", game.players);
