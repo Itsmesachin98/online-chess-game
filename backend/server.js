@@ -62,6 +62,8 @@ app.get("/createGame", (req, res) => {
     };
 
     res.json({ gameId });
+    console.log("This is inside create games");
+    console.log("games", games);
 });
 
 // Function to reset a game
@@ -140,10 +142,10 @@ io.on("connection", (socket) => {
             return;
         }
         console.log("This is inside connections, inside joinGame");
-        console.log(games);
+        console.log("This is games", games);
     });
     console.log("This is inside connection");
-    console.log(games);
+    console.log("This is games", games);
 
     // socket.on("move", ({ gameId, move }) => {
     //     let game = games[gameId];
