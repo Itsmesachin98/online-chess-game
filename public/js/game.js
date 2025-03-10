@@ -37,6 +37,24 @@ document.addEventListener("DOMContentLoaded", function () {
         playerColor = info.color;
 
         console.log("Name:", playerName, "|", "Color:", playerColor);
+
+        if (!board) {
+            // Initialize board for the first time
+            var config = {
+                draggable: true,
+                pieceTheme:
+                    "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
+                position: "start",
+                onDragStart: onDragStart,
+                onDrop: onDrop,
+                orientation: playerColor === "black" ? "black" : "white",
+            };
+
+            board = Chessboard("chessboard", config);
+        } else {
+            // Update existing board orientation dynamically
+            board.orientation(playerColor === "black" ? "black" : "white");
+        }
     });
 
     socket.on("playerUpdate", (players) => {
@@ -105,20 +123,20 @@ document.addEventListener("DOMContentLoaded", function () {
         updateStatus();
     });
 
-    var board;
-    var game = new Chess(); // Creates a new chess game instance
+    // var board;
+    // var game = new Chess(); // Creates a new chess game instance
 
-    var config = {
-        draggable: true,
-        pieceTheme:
-            "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
-        position: "start",
-        onDragStart: onDragStart,
-        onDrop: onDrop,
-        orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
-    };
+    // var config = {
+    //     draggable: true,
+    //     pieceTheme:
+    //         "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
+    //     position: "start",
+    //     onDragStart: onDragStart,
+    //     onDrop: onDrop,
+    //     orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
+    // };
 
-    board = Chessboard("chessboard", config); // Initialize board if not already
+    // board = Chessboard("chessboard", config); // Initialize board if not already
 
     function onDragStart(__, piece) {
         // Prevent moving the piece when the game is over
