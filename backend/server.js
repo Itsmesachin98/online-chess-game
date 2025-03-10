@@ -153,7 +153,7 @@ io.on("connection", (socket) => {
 
             if (Object.keys(game.players).length === 2) {
                 game.isGameOn = true;
-                startTimer(gameId);
+                // startTimer(gameId);
             }
         } else {
             socket.emit("error", "Invalid game ID");
