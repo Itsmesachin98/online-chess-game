@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let isGameOn = false;
     let hasBothPlayersJoined = false;
 
+    var board;
+    var game = new Chess();
+
     // This formats the time
     // function formatTime(time) {
     //     let minutes = Math.floor(time / 60);
