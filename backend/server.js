@@ -104,8 +104,6 @@ app.get("/createGame", (req, res) => {
 // Handle new connections
 io.on("connection", (socket) => {
     socket.on("joinGame", (gameId) => {
-        console.log("I am inside connections, inside joinGame");
-        console.log("Am I running all the time");
         if (games[gameId]) {
             let game = games[gameId];
 
