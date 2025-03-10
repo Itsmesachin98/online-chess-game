@@ -101,9 +101,7 @@ app.get("/createGame", (req, res) => {
 
 // Handle new connections
 io.on("connection", (socket) => {
-    console.log(games);
     socket.on("joinGame", (gameId) => {
-        console.log("This is game id", gameId);
         if (games[gameId]) {
             let game = games[gameId];
 
@@ -140,6 +138,8 @@ io.on("connection", (socket) => {
             return;
         }
     });
+    console.log("This is inside connection");
+    console.log(games);
 
     // socket.on("move", ({ gameId, move }) => {
     //     let game = games[gameId];
@@ -157,8 +157,9 @@ io.on("connection", (socket) => {
         console.log("I got disconnected");
         for (let gameId in games) {
             let game = games[gameId];
-            console.log(games);
-            console.log("game", game);
+            console.log("This is inside disconnections");
+            console.log("This is games", games);
+            console.log("This is game", game);
             if (game.players[socket.id]) {
                 delete game.players[socket.id];
                 io.to(gameId).emit("playerUpdate", game.players);
