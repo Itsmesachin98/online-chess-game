@@ -128,6 +128,7 @@ io.on("connection", (socket) => {
             let game = games[gameId];
 
             if (Object.keys(game.players).length >= 2) {
+                console.log("Game room is full");
                 socket.emit("full", "Game room is full. Try another.");
                 return;
             }
