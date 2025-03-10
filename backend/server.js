@@ -139,6 +139,8 @@ io.on("connection", (socket) => {
             socket.emit("error", "Invalid game ID");
             return;
         }
+        console.log("This is inside connections, inside joinGame");
+        console.log(games);
     });
     console.log("This is inside connection");
     console.log(games);
