@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const pathname = window.location.pathname;
     const gameId = pathname.split("/").pop();
     console.log("This is game id", gameId);
+
+    socket.emit("createGame", gameId);
     socket.emit("joinGame", gameId);
 
     let playerName;

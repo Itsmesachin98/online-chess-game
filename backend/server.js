@@ -52,18 +52,18 @@ app.get("/", (req, res) => {
 
 app.get("/createGame", (req, res) => {
     let gameId = uuidv4().slice(0, 8); // Generate short unique game ID
-    games[gameId] = {
-        players: {},
-        gameFen: "start",
-        isGameOn: false,
-        timers: { white: 600, black: 600 },
-        activeTimer: null,
-        currentTurn: "white",
-    };
+    // games[gameId] = {
+    //     players: {},
+    //     gameFen: "start",
+    //     isGameOn: false,
+    //     timers: { white: 600, black: 600 },
+    //     activeTimer: null,
+    //     currentTurn: "white",
+    // };
 
     res.json({ gameId });
-    console.log("This is inside create games");
-    console.log("games", games);
+    // console.log("This is inside create games");
+    // console.log("games", games);
 });
 
 // Function to reset a game
@@ -103,6 +103,26 @@ app.get("/createGame", (req, res) => {
 
 // Handle new connections
 io.on("connection", (socket) => {
+    socket.on("createGame", (gameId) => {
+        if (games[gameId]) {
+            console.log("Game already exists");
+            return;
+        }
+
+        console.log("A game created");
+
+        games[gameId] = {
+            players: {},
+            gameFen: "start",
+            isGameOn: false,
+            timers: { white: 600, black: 600 },
+            activeTimer: null,
+            currentTurn: "white",
+        };
+
+        console.log("Inside create game", games);
+    });
+
     socket.on("joinGame", (gameId) => {
         if (games[gameId]) {
             let game = games[gameId];
@@ -139,11 +159,9 @@ io.on("connection", (socket) => {
             socket.emit("error", "Invalid game ID");
             return;
         }
-        console.log("This is inside connections, inside joinGame");
-        console.log("This is games", games);
+
+        console.log("Inside join game", games);
     });
-    console.log("This is inside connection");
-    console.log("This is games", games);
 
     // socket.on("move", ({ gameId, move }) => {
     //     let game = games[gameId];
