@@ -164,16 +164,16 @@ io.on("connection", (socket) => {
         console.log("Inside join game", games);
     });
 
-    // socket.on("move", ({ gameId, move }) => {
-    //     let game = games[gameId];
-    //     if (!game) return;
+    socket.on("move", ({ gameId, move }) => {
+        let game = games[gameId];
+        if (!game) return;
 
-    //     game.gameFen = move.fen;
-    //     socket.broadcast.to(gameId).emit("move", move);
+        game.gameFen = move.fen;
+        socket.broadcast.to(gameId).emit("move", move);
 
-    //     game.currentTurn = game.currentTurn === "white" ? "black" : "white";
-    //     startTimer(gameId);
-    // });
+        game.currentTurn = game.currentTurn === "white" ? "black" : "white";
+        // startTimer(gameId);
+    });
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {

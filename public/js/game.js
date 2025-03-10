@@ -210,12 +210,12 @@ document.addEventListener("DOMContentLoaded", function () {
     //     console.log(gameUrl);
     // });
 
-    // socket.on("move", (move) => {
-    //     game.move(move);
-    //     board.position(game.fen());
-    //     updateStatus();
-    //     startGame();
-    // });
+    socket.on("move", (move) => {
+        game.move(move);
+        board.position(game.fen());
+        updateStatus();
+        // startGame();
+    });
 
     // socket.on("timerUpdate", (timers) => {
     //     if (playerColor === "white") {
