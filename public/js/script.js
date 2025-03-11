@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const createGameBtn = document.getElementById("createGameBtn");
-    const gameLink = document.getElementById("gameLink");
+    const gameLink = document.getElementById("game-link");
 
     var config = {
         pieceTheme:
