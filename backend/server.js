@@ -135,6 +135,7 @@ io.on("connection", (socket) => {
             game.players[playerId] = { name: playerName, color: playerColor };
 
             socket.join(gameId);
+            socket.gameId = gameId; // Save gameId on socket object
             socket.emit("playerInfo", { name: playerName, color: playerColor });
             io.to(gameId).emit("playerUpdate", game.players);
             socket.emit("gameState", game.gameFen);
@@ -162,17 +163,16 @@ io.on("connection", (socket) => {
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
-        for (let gameId in games) {
-            let game = games[gameId];
-            if (game.players[socket.id]) {
-                delete game.players[socket.id];
-                io.to(gameId).emit("playerUpdate", game.players);
-            }
+        let gameId = socket.gameId; // Retrieve gameId from socket
+        console.log("This is the game id", gameId);
+        if (gameId && games[gameId] && games[gameId].players[socket.id]) {
+            delete games[gameId].players[socket.id];
+            io.to(gameId).emit("playerUpdate", games[gameId].players);
 
-            if (Object.keys(game.players).length === 0) {
-                delete games[gameId]; // Clean up empty game rooms
-            } else if (Object.keys(game.players).length < 2) {
-                clearInterval(game.activeTimer);
+            if (Object.keys(games[gameId].players).length === 0) {
+                delete games[gameId];
+            } else if (Object.keys(games[gameId].players).length < 2) {
+                clearInterval(games[gameId].activeTimer);
             }
         }
     });

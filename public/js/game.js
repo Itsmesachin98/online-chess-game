@@ -19,11 +19,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.emit("createGame", gameId);
     socket.emit("joinGame", gameId);
+    // localStorage.setItem("gameId", gameId); // Save the gameId in localStorage
 
     let playerName;
     let playerColor;
     let bothPlayersJoined = false;
-    // let isGameOn = false;
 
     var board;
     var game = new Chess();
@@ -218,3 +218,11 @@ document.addEventListener("DOMContentLoaded", function () {
     //     alert(`${winner} wins by time!`);
     // });
 });
+
+// window.onload = () => {
+//     const savedGameId = localStorage.getItem("gameId");
+//     if (savedGameId) {
+//         console.log(`Reconnecting to game: ${savedGameId}`);
+//         socket.emit("rejoinGame", savedGameId);
+//     }
+// };
