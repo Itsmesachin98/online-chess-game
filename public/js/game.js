@@ -66,12 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
             bothPlayersJoined = true;
         }
 
-        // if (Object.keys(players).length < 2) {
-        //     if (!isGameOn) hasBothPlayersJoined = false;
-        // } else {
-        //     hasBothPlayersJoined = true;
-        // }
-
         let whitePlayer = Object.values(players).find(
             (player) => player.color === "white"
         );
@@ -129,21 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         updateStatus();
     });
-
-    // var board;
-    // var game = new Chess(); // Creates a new chess game instance
-
-    // var config = {
-    //     draggable: true,
-    //     pieceTheme:
-    //         "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
-    //     position: "start",
-    //     onDragStart: onDragStart,
-    //     onDrop: onDrop,
-    //     orientation: playerColor === "black" ? "black" : "white", // Rotate board for black player
-    // };
-
-    // board = Chessboard("chessboard", config); // Initialize board if not already
 
     function onDragStart(__, piece) {
         // Prevent moving the piece when the game is over
