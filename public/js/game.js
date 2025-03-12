@@ -155,7 +155,8 @@ document.addEventListener("DOMContentLoaded", function () {
             promotion: "q", // Always promotes pawns to queen
         });
 
-        if (move === null) return "snapback"; // Invalid move, return piece to original position
+        // If the move is invalid, return the piece to its original position
+        if (move === null) return "snapback";
         move.fen = game.fen();
 
         // Send the move to the server

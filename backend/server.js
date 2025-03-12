@@ -145,10 +145,10 @@ io.on("connection", (socket) => {
             io.to(gameId).emit("playerUpdate", game.players);
             socket.emit("gameState", game.gameFen);
 
-            if (Object.keys(game.players).length === 2) {
-                game.isGameOn = true;
-                startTimer(gameId);
-            }
+            // if (Object.keys(game.players).length === 2) {
+            //     game.isGameOn = true;
+            //     startTimer(gameId);
+            // }
         } else {
             socket.emit("error", "Invalid game ID");
             return;
@@ -166,7 +166,7 @@ io.on("connection", (socket) => {
         socket.broadcast.to(gameId).emit("move", move);
 
         game.currentTurn = game.currentTurn === "white" ? "black" : "white";
-        // startTimer(gameId);
+        startTimer(gameId);
     });
 
     // Fires whenever a player disconnects
