@@ -52,18 +52,7 @@ app.get("/", (req, res) => {
 
 app.get("/createGame", (req, res) => {
     let gameId = uuidv4().slice(0, 8); // Generate short unique game ID
-    // games[gameId] = {
-    //     players: {},
-    //     gameFen: "start",
-    //     isGameOn: false,
-    //     timers: { white: 600, black: 600 },
-    //     activeTimer: null,
-    //     currentTurn: "white",
-    // };
-
     res.json({ gameId });
-    // console.log("This is inside create games");
-    // console.log("games", games);
 });
 
 // Function to reset a game
@@ -103,7 +92,9 @@ function startTimer(gameId) {
 
 // Handle new connections
 io.on("connection", (socket) => {
+    // It creates a new game
     socket.on("createGame", (gameId) => {
+        // It ensures that two games with the same game ID can't be created
         if (games[gameId]) {
             console.log("Game already exists");
             return;
@@ -123,10 +114,12 @@ io.on("connection", (socket) => {
         console.log("Inside create game", games);
     });
 
+    // It allows the player to join the game
     socket.on("joinGame", (gameId) => {
         if (games[gameId]) {
             let game = games[gameId];
 
+            // It ensures that only two players can join the same game room
             if (Object.keys(game.players).length >= 2) {
                 console.log("Game room is full");
                 socket.emit("full", "Game room is full. Try another.");
@@ -164,6 +157,7 @@ io.on("connection", (socket) => {
         console.log("Inside join game", games);
     });
 
+    // It listens for moves and updates the board for both players
     socket.on("move", ({ gameId, move }) => {
         let game = games[gameId];
         if (!game) return;
