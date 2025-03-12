@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Display game link
         const gameLink = document.getElementById("game-link");
-        gameLink.innerHTML = `Share this link: <a href="${link}" target="_blank">${link}</a>`;
+        gameLink.innerHTML = `Game Link: <a href="${link}" target="_blank">${link}</a>`;
     });
 
     function createGameLink() {
