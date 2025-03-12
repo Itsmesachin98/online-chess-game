@@ -79,27 +79,27 @@ app.get("/createGame", (req, res) => {
 // }
 
 // Function to start the timer
-// function startTimer(gameId) {
-//     let game = games[gameId];
-//     if (!game) return;
+function startTimer(gameId) {
+    let game = games[gameId];
+    if (!game) return;
 
-//     if (game.activeTimer) clearInterval(game.activeTimer);
+    if (game.activeTimer) clearInterval(game.activeTimer);
 
-//     game.activeTimer = setInterval(() => {
-//         if (game.timers[game.currentTurn] > 0) {
-//             game.timers[game.currentTurn]--;
-//             io.to(gameId).emit("timerUpdate", game.timers);
-//         } else {
-//             clearInterval(game.activeTimer);
-//             io.to(gameId).emit(
-//                 "gameOver",
-//                 game.currentTurn === "white" ? "black" : "white"
-//             );
-//             resetGame(gameId);
-//             io.to(gameId).emit("gameState", "start");
-//         }
-//     }, 1000);
-// }
+    game.activeTimer = setInterval(() => {
+        if (game.timers[game.currentTurn] > 0) {
+            game.timers[game.currentTurn]--;
+            io.to(gameId).emit("timerUpdate", game.timers);
+        } else {
+            clearInterval(game.activeTimer);
+            io.to(gameId).emit(
+                "gameOver",
+                game.currentTurn === "white" ? "black" : "white"
+            );
+            resetGame(gameId);
+            io.to(gameId).emit("gameState", "start");
+        }
+    }, 1000);
+}
 
 // Handle new connections
 io.on("connection", (socket) => {
@@ -154,7 +154,7 @@ io.on("connection", (socket) => {
 
             if (Object.keys(game.players).length === 2) {
                 game.isGameOn = true;
-                // startTimer(gameId);
+                startTimer(gameId);
             }
         } else {
             socket.emit("error", "Invalid game ID");

@@ -29,11 +29,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var game = new Chess();
 
     // This formats the time
-    // function formatTime(time) {
-    //     let minutes = Math.floor(time / 60);
-    //     let seconds = time % 60;
-    //     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    // }
+    function formatTime(time) {
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    }
 
     socket.on("playerInfo", (info) => {
         playerName = info.name;
@@ -217,15 +217,15 @@ document.addEventListener("DOMContentLoaded", function () {
         // startGame();
     });
 
-    // socket.on("timerUpdate", (timers) => {
-    //     if (playerColor === "white") {
-    //         timerBottom.innerText = formatTime(timers.white);
-    //         timerTop.innerText = formatTime(timers.black);
-    //     } else {
-    //         timerBottom.innerText = formatTime(timers.black);
-    //         timerTop.innerText = formatTime(timers.white);
-    //     }
-    // });
+    socket.on("timerUpdate", (timers) => {
+        if (playerColor === "white") {
+            timerBottom.innerText = formatTime(timers.white);
+            timerTop.innerText = formatTime(timers.black);
+        } else {
+            timerBottom.innerText = formatTime(timers.black);
+            timerTop.innerText = formatTime(timers.white);
+        }
+    });
 
     // socket.on("gameOver", (winner) => {
     //     alert(`${winner} wins by time!`);
