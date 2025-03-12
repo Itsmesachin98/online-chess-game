@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let playerName;
     let playerColor;
-    let isGameOn = false;
-    let hasBothPlayersJoined = false;
+    // let isGameOn = false;
+    // let hasBothPlayersJoined = false;
 
     var board;
     var game = new Chess();
@@ -62,11 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.on("playerUpdate", (players) => {
         // When both players join the game, only then can the players make a move.
-        if (Object.keys(players).length < 2) {
-            if (!isGameOn) hasBothPlayersJoined = false;
-        } else {
-            hasBothPlayersJoined = true;
-        }
+        // if (Object.keys(players).length < 2) {
+        //     if (!isGameOn) hasBothPlayersJoined = false;
+        // } else {
+        //     hasBothPlayersJoined = true;
+        // }
 
         let whitePlayer = Object.values(players).find(
             (player) => player.color === "white"
@@ -217,6 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // startGame();
     });
 
+    // This updates the timer every second
     socket.on("timerUpdate", (timers) => {
         if (playerColor === "white") {
             timerBottom.innerText = formatTime(timers.white);
