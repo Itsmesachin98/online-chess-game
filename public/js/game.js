@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function onDragStart(__, piece) {
         // Prevent moving the piece when the game is over
         if (game.game_over()) return false;
-        if (!hasBothPlayersJoined) return false;
+        // if (!hasBothPlayersJoined) return false;
 
         // Prevent moving opponent's pieces
         if (
