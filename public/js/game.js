@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let playerName;
     let playerColor;
+    let bothPlayersJoined = false;
     // let isGameOn = false;
-    // let hasBothPlayersJoined = false;
 
     var board;
     var game = new Chess();
@@ -62,6 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     socket.on("playerUpdate", (players) => {
         // When both players join the game, only then can the players make a move.
+        if (Object.keys(players).length > 1) {
+            bothPlayersJoined = true;
+        }
+
         // if (Object.keys(players).length < 2) {
         //     if (!isGameOn) hasBothPlayersJoined = false;
         // } else {
@@ -144,7 +148,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function onDragStart(__, piece) {
         // Prevent moving the piece when the game is over
         if (game.game_over()) return false;
-        // if (!hasBothPlayersJoined) return false;
+
+        // Make sure that moves can only be made after both players have joined the game.
+        if (!bothPlayersJoined) return false;
 
         // Prevent moving opponent's pieces
         if (
