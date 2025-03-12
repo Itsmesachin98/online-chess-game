@@ -172,7 +172,7 @@ io.on("connection", (socket) => {
             if (Object.keys(games[gameId].players).length === 0) {
                 delete games[gameId];
             } else if (Object.keys(games[gameId].players).length < 2) {
-                clearInterval(games[gameId].activeTimer);
+                // clearInterval(games[gameId].activeTimer);
             }
         }
     });
