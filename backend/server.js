@@ -96,11 +96,8 @@ io.on("connection", (socket) => {
     socket.on("createGame", (gameId) => {
         // It ensures that two games with the same game ID can't be created
         if (games[gameId]) {
-            console.log("Game already exists");
             return;
         }
-
-        console.log("A game created");
 
         games[gameId] = {
             players: {},
@@ -110,8 +107,6 @@ io.on("connection", (socket) => {
             activeTimer: null,
             currentTurn: "white",
         };
-
-        console.log("Inside create game", games);
     });
 
     // It allows the player to join the game
@@ -121,7 +116,6 @@ io.on("connection", (socket) => {
 
             // It ensures that only two players can join the same game room
             if (Object.keys(game.players).length >= 2) {
-                console.log("Game room is full");
                 socket.emit("full", "Game room is full. Try another.");
                 return;
             }
@@ -145,16 +139,13 @@ io.on("connection", (socket) => {
             io.to(gameId).emit("playerUpdate", game.players);
             socket.emit("gameState", game.gameFen);
 
-            // if (Object.keys(game.players).length === 2) {
-            //     game.isGameOn = true;
-            //     startTimer(gameId);
-            // }
+            if (Object.keys(game.players).length === 2) {
+                game.isGameOn = true;
+            }
         } else {
             socket.emit("error", "Invalid game ID");
             return;
         }
-
-        console.log("Inside join game", games);
     });
 
     // It listens for moves and updates the board for both players
@@ -171,12 +162,8 @@ io.on("connection", (socket) => {
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
-        console.log("I got disconnected");
         for (let gameId in games) {
             let game = games[gameId];
-            console.log("This is inside disconnections");
-            console.log("This is games", games);
-            console.log("This is game", game);
             if (game.players[socket.id]) {
                 delete game.players[socket.id];
                 io.to(gameId).emit("playerUpdate", game.players);
