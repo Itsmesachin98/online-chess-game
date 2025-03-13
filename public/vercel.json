@@ -1,6 +1,0 @@
-{
-    "routes": [
-        { "src": "/gamearena/(.*)", "dest": "/gamearena.html" },
-        { "src": "/gameroom", "dest": "/public/gameroom.html" }
-    ]
-}
