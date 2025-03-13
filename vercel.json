@@ -2,11 +2,11 @@
     "rewrites": [
         {
             "source": "/gameroom",
-            "destination": "/public/gameroom.html"
+            "destination": "/gameroom.html"
         },
         {
             "source": "/gamearena/:path*",
-            "destination": "/public/index.html"
+            "destination": "/index.html"
         }
     ],
     "routes": [
