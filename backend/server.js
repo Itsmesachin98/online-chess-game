@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const cors = require("cors");
@@ -53,6 +54,10 @@ app.get("/", (req, res) => {
 app.get("/createGame", (req, res) => {
     let gameId = uuidv4().slice(0, 8); // Generate short unique game ID
     res.json({ gameId });
+});
+
+app.get("/gameroom", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "gameroom.html"));
 });
 
 // Function to reset a game
@@ -116,7 +121,8 @@ io.on("connection", (socket) => {
 
             // It ensures that only two players can join the same game room
             if (Object.keys(game.players).length >= 2) {
-                socket.emit("full", "Game room is full. Try another.");
+                // socket.emit("full", "Game room is full. Try another.");
+                socket.emit("roomFull");
                 return;
             }
 
