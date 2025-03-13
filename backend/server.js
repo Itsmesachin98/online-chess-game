@@ -122,7 +122,7 @@ io.on("connection", (socket) => {
             // It ensures that only two players can join the same game room
             if (Object.keys(game.players).length >= 2) {
                 // socket.emit("full", "Game room is full. Try another.");
-                socket.emit("roomFull");
+                socket.emit("roomFull", "/gameroom");
                 return;
             }
 

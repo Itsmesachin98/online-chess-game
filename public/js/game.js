@@ -35,9 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     }
 
-    socket.on("roomFull", () => {
+    socket.on("roomFull", (redirectUrl) => {
         alert("Room is full! Redirecting to game room page...");
-        window.location.href = "/gameroom";
+        window.location.href = redirectUrl;
     });
 
     socket.on("playerInfo", (info) => {
