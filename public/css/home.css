@@ -1,8 +1,8 @@
-body {
+/* body {
     display: flex;
     justify-content: center;
-    margin-top: 10rem;
-}
+    margin-top: 5rem;
+} */
 
 .board-b72b1 {
     border: none !important;
@@ -17,7 +17,7 @@ body {
     gap: 1.6rem;
 }
 
-#board1 {
+#dummy-board {
     width: 100%;
     border-radius: 10rem;
 }

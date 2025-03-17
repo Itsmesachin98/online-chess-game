@@ -9,7 +9,9 @@ html {
 }
 
 body {
-    margin: 0;
+    margin: 5rem 0 0 0;
     box-sizing: border-box;
     background-color: #212529;
+    display: flex;
+    justify-content: center;
 }
