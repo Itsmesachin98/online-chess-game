@@ -8,30 +8,30 @@ const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 const app = express();
 const server = createServer(app);
 
-app.use(
-    cors({
-        origin: "https://onlinechessgame.vercel.app",
-        methods: ["GET", "POST"],
-        credentials: true,
-    })
-);
+// app.use(
+//     cors({
+//         origin: "https://onlinechessgame.vercel.app",
+//         methods: ["GET", "POST"],
+//         credentials: true,
+//     })
+// );
 
-app.use((req, res, next) => {
-    res.header(
-        "Access-Control-Allow-Origin",
-        "https://onlinechessgame.vercel.app"
-    );
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
+// app.use((req, res, next) => {
+//     res.header(
+//         "Access-Control-Allow-Origin",
+//         "https://onlinechessgame.vercel.app"
+//     );
+//     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+//     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//     res.header("Access-Control-Allow-Credentials", "true");
 
-    // Handle Preflight OPTIONS Request
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(204);
-    }
+//     // Handle Preflight OPTIONS Request
+//     if (req.method === "OPTIONS") {
+//         return res.sendStatus(204);
+//     }
 
-    next();
-});
+//     next();
+// });
 
 const io = new Server(server, {
     cors: {

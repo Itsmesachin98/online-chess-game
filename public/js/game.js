@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // const socket = io("https://online-chess-game-shwe.onrender.com");
-    const socket = io("https://online-chess-game-shwe.onrender.com", {
-        transports: ["websocket"], // Force WebSocket instead of HTTP polling
-        withCredentials: true,
-    });
+    const socket = io("https://online-chess-game-shwe.onrender.com");
+    // const socket = io("https://online-chess-game-shwe.onrender.com", {
+    //     transports: ["websocket"], // Force WebSocket instead of HTTP polling
+    //     withCredentials: true,
+    // });
 
     // const socket = io("http://localhost:3000");
     console.log("Connected to server");
