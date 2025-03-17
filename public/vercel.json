@@ -5,8 +5,8 @@
             "destination": "/gameroom.html"
         },
         {
-            "source": "/gamearena/:path*",
-            "destination": "/gamearena.html"
+            "source": "/game/:path*",
+            "destination": "/game.html"
         }
     ]
 }
