@@ -13,6 +13,10 @@
     width: 100%;
 }
 
+#chessboard {
+    margin: 1rem 0;
+}
+
 /* 
 #chessboard {
     height: 40rem;
@@ -21,10 +25,17 @@
 
 .player-info {
     padding: 0 0.5rem;
-    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
 }
+
+/* .player-info-top {
+    margin-bottom: 1rem;
+}
+
+.player-info-bottom {
+    margin-top: 1rem;
+} */
 
 .player-name {
     font-size: 1.6rem;
