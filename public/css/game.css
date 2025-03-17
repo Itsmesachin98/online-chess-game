@@ -1,17 +1,23 @@
+.board-b72b1 {
+    border: none !important;
+    border-radius: 0.5rem !important;
+    overflow: hidden;
+}
+
 #player-board {
-    /* width: fit-content; */
-    width: 60rem;
+    width: 52rem;
 }
 
 #chessboard,
 .player-info {
-    width: 40rem;
+    width: 100%;
 }
 
+/* 
 #chessboard {
     height: 40rem;
     position: relative;
-}
+} */
 
 .player-info {
     padding: 0 0.5rem;
