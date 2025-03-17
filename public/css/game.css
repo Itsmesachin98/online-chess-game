@@ -17,27 +17,14 @@
     margin: 1rem 0;
 }
 
-/* 
-#chessboard {
-    height: 40rem;
-    position: relative;
-} */
-
 .player-info {
     padding: 0 0.5rem;
     display: flex;
     justify-content: space-between;
 }
 
-/* .player-info-top {
-    margin-bottom: 1rem;
-}
-
-.player-info-bottom {
-    margin-top: 1rem;
-} */
-
 .player-name {
+    color: #fff;
     font-size: 1.6rem;
     display: flex;
     align-items: center;
@@ -54,5 +41,10 @@
 }
 
 .timer-text {
+    font-size: 1.6rem;
+}
+
+#status {
+    color: #fff;
     font-size: 1.6rem;
 }
