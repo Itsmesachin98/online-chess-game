@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // "http://localhost:3000/createGame"
         );
         const data = await response.json();
-        const link = `https://onlinechessgame.vercel.app/gamearena/${data.gameId}`;
+        const link = `https://onlinechessgame.vercel.app/game/${data.gameId}`;
 
         // Display game link
         const gameLink = document.getElementById("game-link");
