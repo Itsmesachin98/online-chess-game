@@ -6,7 +6,7 @@
         },
         {
             "source": "/gamearena/:path*",
-            "destination": "/index.html"
+            "destination": "/gamearena.html"
         }
     ]
 }
