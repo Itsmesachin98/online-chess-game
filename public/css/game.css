@@ -1,5 +1,6 @@
 #player-board {
-    width: fit-content;
+    /* width: fit-content; */
+    width: 60rem;
 }
 
 #chessboard,

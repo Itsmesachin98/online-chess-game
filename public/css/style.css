@@ -1,12 +1,25 @@
-.interface,
-#board1 {
-    width: 40rem;
+body {
+    display: flex;
+    justify-content: center;
+    margin-top: 10rem;
+}
+
+.board-b72b1 {
+    border: none !important;
+    border-radius: 0.5rem !important;
+    overflow: hidden;
 }
 
 .interface {
+    width: 52rem;
     display: flex;
     flex-direction: column;
     gap: 1.6rem;
+}
+
+#board1 {
+    width: 100%;
+    border-radius: 10rem;
 }
 
 .btn-container {
