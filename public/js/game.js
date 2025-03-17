@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     socket.on("roomFull", (redirectUrl) => {
-        alert("Room is full! Redirecting to game room page...");
+        // alert("Room is full! Redirecting to game room page...");
         window.location.href = redirectUrl;
     });
 
