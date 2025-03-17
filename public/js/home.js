@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png",
         position: "start",
     };
-    var board1 = Chessboard("board1", config);
+    var dummyBoard = Chessboard("dummy-board", config);
 
     createGameBtn.addEventListener("click", async () => {
         console.log("Create game button is clicked");
