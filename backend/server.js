@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
             players: {},
             gameFen: "start",
             isGameOn: false,
-            timers: { white: 600, black: 600 },
+            timers: { white: 60, black: 60 },
             activeTimer: null,
             currentTurn: "white",
         };
