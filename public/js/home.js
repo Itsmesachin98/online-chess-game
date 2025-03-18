@@ -11,7 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     createGameBtn.addEventListener("click", async () => {
         console.log("Create game button is clicked");
-        createGameLink();
+        if (!document.querySelector(".link-container")) {
+            createGameLink();
+        }
         const response = await fetch(
             "https://online-chess-game-shwe.onrender.com/createGame"
             // "http://localhost:3000/createGame"
