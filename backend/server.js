@@ -8,31 +8,6 @@ const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 const app = express();
 const server = createServer(app);
 
-// app.use(
-//     cors({
-//         origin: "https://onlinechessgame.vercel.app",
-//         methods: ["GET", "POST"],
-//         credentials: true,
-//     })
-// );
-
-// app.use((req, res, next) => {
-//     res.header(
-//         "Access-Control-Allow-Origin",
-//         "https://onlinechessgame.vercel.app"
-//     );
-//     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-//     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//     res.header("Access-Control-Allow-Credentials", "true");
-
-//     // Handle Preflight OPTIONS Request
-//     if (req.method === "OPTIONS") {
-//         return res.sendStatus(204);
-//     }
-
-//     next();
-// });
-
 const io = new Server(server, {
     cors: {
         origin: "https://onlinechessgame.vercel.app",
@@ -61,16 +36,16 @@ app.get("/gameroom", (req, res) => {
 });
 
 // Function to reset a game
-// function resetGame(gameId) {
-//     if (games[gameId]) {
-//         games[gameId].gameFen = "start";
-//         games[gameId].isGameOn = false;
-//         games[gameId].timers = { white: 600, black: 600 };
-//         clearInterval(games[gameId].activeTimer);
-//         games[gameId].activeTimer = null;
-//         games[gameId].currentTurn = "white";
-//     }
-// }
+function resetGame(gameId) {
+    if (games[gameId]) {
+        games[gameId].gameFen = "start";
+        games[gameId].isGameOn = false;
+        games[gameId].timers = { white: 60, black: 60 };
+        clearInterval(games[gameId].activeTimer);
+        games[gameId].activeTimer = null;
+        games[gameId].currentTurn = "white";
+    }
+}
 
 // Function to start the timer
 function startTimer(gameId) {
@@ -121,7 +96,6 @@ io.on("connection", (socket) => {
 
             // It ensures that only two players can join the same game room
             if (Object.keys(game.players).length >= 2) {
-                // socket.emit("full", "Game room is full. Try another.");
                 socket.emit("roomFull", "/gameroom");
                 return;
             }
