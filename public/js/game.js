@@ -219,9 +219,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // socket.on("gameOver", (winner) => {
-    //     alert(`${winner} wins by time!`);
-    // });
+    socket.on("gameOver", (winner) => {
+        alert(`${winner} wins by time!`);
+    });
 });
 
 // window.onload = () => {
