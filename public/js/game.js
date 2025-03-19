@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Send the move to the server
         socket.emit("move", { gameId, move });
 
-        updateStatus();
+        // updateStatus();
     }
 
     function updateStatus() {
