@@ -1,3 +1,11 @@
+a {
+    color: #ffb22c;
+}
+
+a:active {
+    color: #e52020;
+}
+
 .board-b72b1 {
     border: none !important;
     border-radius: 0.5rem !important;
