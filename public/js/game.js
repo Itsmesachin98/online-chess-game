@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // const socket = io("http://localhost:3000");
     console.log("Connected to server");
 
+    const playerBoard = document.getElementById("player-board");
     const playerTop = document.getElementById("player-top");
     const playerBottom = document.getElementById("player-bottom");
     const timerTop = document.getElementById("timer-top");
@@ -167,23 +168,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateStatus() {
-        var status = "";
+        // var status = "";
+
+        // if (game.in_checkmate()) {
+        //     if (game.turn() === "w") {
+        //         status = "Checkmate! Black wins!";
+        //     } else {
+        //         status = "Checkmate! White wins!";
+        //     }
+        // } else if (game.in_draw()) {
+        //     status = "Game draw!";
+        // } else {
+        //     if (game.turn() === "w") {
+        //         status = "White's turn";
+        //     } else status = "Black's turn";
+        // }
+
+        // document.getElementById("status").innerText = status;
 
         if (game.in_checkmate()) {
             if (game.turn() === "w") {
-                status = "Checkmate! Black wins!";
+                gameStatus("Checkmate! Black wins!");
             } else {
-                status = "Checkmate! White wins!";
+                gameStatus("Checkmate! White wins!");
             }
         } else if (game.in_draw()) {
-            status = "Game draw!";
-        } else {
-            if (game.turn() === "w") {
-                status = "White's turn";
-            } else status = "Black's turn";
+            gameStatus("Game draw!");
         }
-
-        document.getElementById("status").innerText = status;
     }
 
     // function startGame() {
@@ -218,6 +229,17 @@ document.addEventListener("DOMContentLoaded", function () {
     socket.on("gameOver", (winner) => {
         alert(`${winner} wins by time!`);
     });
+
+    function gameStatus(text) {
+        const status = document.createElement("div");
+        status.classList.add("status");
+
+        const span = document.createElement("span");
+        span.innerText = text;
+
+        status.appendChild(span);
+        playerBoard.appendChild(status);
+    }
 });
 
 // window.onload = () => {
