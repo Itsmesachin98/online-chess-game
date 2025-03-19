@@ -46,6 +46,7 @@
 
 .status {
     width: 100%;
+    margin: 1.6rem 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -53,5 +54,5 @@
 
 .status-text {
     color: #fff;
-    font-size: 1.6rem;
+    font-size: 2rem;
 }

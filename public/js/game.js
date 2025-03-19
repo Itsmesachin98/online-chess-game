@@ -168,30 +168,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateStatus() {
-        // var status = "";
-
-        // if (game.in_checkmate()) {
-        //     if (game.turn() === "w") {
-        //         status = "Checkmate! Black wins!";
-        //     } else {
-        //         status = "Checkmate! White wins!";
-        //     }
-        // } else if (game.in_draw()) {
-        //     status = "Game draw!";
-        // } else {
-        //     if (game.turn() === "w") {
-        //         status = "White's turn";
-        //     } else status = "Black's turn";
-        // }
-
-        // document.getElementById("status").innerText = status;
-
         if (game.in_checkmate()) {
             if (game.turn() === "w") {
-                console.log("Checkmate! Black wins!");
                 gameStatus("Checkmate! Black wins!");
             } else {
-                console.log("Checkmate! Black wins!");
                 gameStatus("Checkmate! White wins!");
             }
         } else if (game.in_draw()) {
