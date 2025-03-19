@@ -11,6 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     createGameBtn.addEventListener("click", async () => {
         console.log("Create game button is clicked");
+
+        // It creates a loader and disables the button
+        if (!document.querySelector(".loader")) {
+            createGameBtn.innerText = "";
+            createLoader();
+            createGameBtn.disabled = true;
+        }
+
         if (!document.querySelector(".link-container")) {
             createGameLink();
         }
@@ -21,11 +29,26 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = await response.json();
         const link = `https://onlinechessgame.vercel.app/game/${data.gameId}`;
 
-        // Display game link
+        // It removes the loader and enables the button
+        if (document.querySelector(".loader")) {
+            document.querySelector(".loader").remove();
+            createGameBtn.innerText = "Create a Game";
+            createGameBtn.disabled = false;
+        }
+
+        // It shows the game link
         const gameLink = document.getElementById("game-link");
         gameLink.innerHTML = `Game Link: <a href="${link}" target="_blank">${link}</a>`;
     });
 
+    // Function to create a loader
+    function createLoader() {
+        const loader = document.createElement("span");
+        loader.classList.add("loader");
+        createGameBtn.appendChild(loader);
+    }
+
+    // Function to generate the game link
     function createGameLink() {
         // Create the link container div
         const linkContainer = document.createElement("div");
