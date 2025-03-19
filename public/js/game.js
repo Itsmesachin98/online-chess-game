@@ -170,6 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateStatus() {
         let winner;
         if (game.in_checkmate()) {
+            console.log("Someone got checkmated");
             if (game.turn() === "w") {
                 console.log("Black wins");
                 winner = "Black";
