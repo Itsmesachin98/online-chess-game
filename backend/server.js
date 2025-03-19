@@ -142,6 +142,13 @@ io.on("connection", (socket) => {
         startTimer(gameId);
     });
 
+    socket.on("checkmate", ({ gameId, winner }) => {
+        if (games[gameId] && games[gameId].isGameOn) {
+            games[gameId].isGameOn = false;
+            io.to(gameId).emit("gameOver", { winner });
+        }
+    });
+
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
         let gameId = socket.gameId; // Retrieve gameId from socket

@@ -161,23 +161,26 @@ document.addEventListener("DOMContentLoaded", function () {
         if (move === null) return "snapback";
         move.fen = game.fen();
 
-        console.log("I am before update status");
-        updateStatus();
-        console.log("I am after update status");
-
         // Send the move to the server
         socket.emit("move", { gameId, move });
+
+        updateStatus();
     }
 
     function updateStatus() {
+        let winner;
         if (game.in_checkmate()) {
             if (game.turn() === "w") {
                 console.log("Black wins");
-                gameStatus("Checkmate! Black wins!");
+                winner = "White";
+                // gameStatus("Checkmate! Black wins!");
             } else {
                 console.log("White wins");
-                gameStatus("Checkmate! White wins!");
+                winner = "Black";
+                // gameStatus("Checkmate! White wins!");
             }
+
+            socket.emit("checkmate", { gameId, winner });
         } else if (game.in_draw()) {
             gameStatus("Game draw!");
         }
@@ -215,16 +218,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     socket.on("gameOver", (winner) => {
-        alert(`${winner} wins by time!`);
+        // alert(`${winner} wins by time!`);
+        gameStatus(winner);
     });
 
-    function gameStatus(text) {
+    function gameStatus(color) {
         const status = document.createElement("div");
         status.classList.add("status");
 
         const statusText = document.createElement("span");
         statusText.classList.add("status-text");
-        statusText.innerText = text;
+        statusText.innerText = `Checkmate! ${color} wins!`;
 
         status.appendChild(statusText);
         playerBoard.appendChild(status);
