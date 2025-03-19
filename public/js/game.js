@@ -234,10 +234,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const status = document.createElement("div");
         status.classList.add("status");
 
-        const span = document.createElement("span");
-        span.innerText = text;
+        const statusText = document.createElement("span");
+        statusText.classList.add("status-text");
+        statusText.innerText = text;
 
-        status.appendChild(span);
+        status.appendChild(statusText);
         playerBoard.appendChild(status);
     }
 });

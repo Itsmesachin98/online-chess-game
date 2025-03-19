@@ -44,7 +44,14 @@
     font-size: 1.6rem;
 }
 
-#status {
+.status {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.status-text {
     color: #fff;
     font-size: 1.6rem;
 }

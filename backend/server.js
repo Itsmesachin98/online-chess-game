@@ -19,6 +19,7 @@ const io = new Server(server, {
 
 app.use(cors());
 
+let time = 600; // This is the game time
 let games = {}; // Stores game data with gameId as key
 
 // Test Route to Check if Server is Running
@@ -40,7 +41,7 @@ function resetGame(gameId) {
     if (games[gameId]) {
         games[gameId].gameFen = "start";
         games[gameId].isGameOn = false;
-        games[gameId].timers = { white: 60, black: 60 };
+        games[gameId].timers = { white: time, black: time };
         clearInterval(games[gameId].activeTimer);
         games[gameId].activeTimer = null;
         games[gameId].currentTurn = "white";
@@ -83,7 +84,7 @@ io.on("connection", (socket) => {
             players: {},
             gameFen: "start",
             isGameOn: false,
-            timers: { white: 60, black: 60 },
+            timers: { white: time, black: time },
             activeTimer: null,
             currentTurn: "white",
         };
