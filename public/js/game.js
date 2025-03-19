@@ -160,11 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // If the move is invalid, return the piece to its original position
         if (move === null) return "snapback";
         move.fen = game.fen();
+        updateStatus();
 
         // Send the move to the server
         socket.emit("move", { gameId, move });
-
-        updateStatus();
     }
 
     function updateStatus() {
