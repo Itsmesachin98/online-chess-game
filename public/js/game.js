@@ -170,8 +170,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateStatus() {
         if (game.in_checkmate()) {
             if (game.turn() === "w") {
+                console.log("Black wins");
                 gameStatus("Checkmate! Black wins!");
             } else {
+                console.log("White wins");
                 gameStatus("Checkmate! White wins!");
             }
         } else if (game.in_draw()) {
