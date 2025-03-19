@@ -183,6 +183,8 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("I am draw");
             gameStatus("Game draw!");
         }
+
+        console.log("Am I running all the time");
     }
 
     // function startGame() {
