@@ -143,10 +143,11 @@ io.on("connection", (socket) => {
     });
 
     socket.on("checkmate", ({ gameId, winner }) => {
-        if (games[gameId] && games[gameId].isGameOn) {
-            games[gameId].isGameOn = false;
-            io.to(gameId).emit("gameOver", { winner });
-        }
+        // if (games[gameId] && games[gameId].isGameOn) {
+        //     games[gameId].isGameOn = false;
+        //     io.to(gameId).emit("gameOver", { winner });
+        // }
+        io.to(gameId).emit("gameOver", { winner });
     });
 
     // Fires whenever a player disconnects
