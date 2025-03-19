@@ -172,20 +172,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (game.in_checkmate()) {
             if (game.turn() === "w") {
                 console.log("Black wins");
-                winner = "White";
-                // gameStatus("Checkmate! Black wins!");
+                winner = "Black";
             } else {
                 console.log("White wins");
-                winner = "Black";
-                // gameStatus("Checkmate! White wins!");
+                winner = "White";
             }
 
             socket.emit("checkmate", { gameId, winner });
         } else if (game.in_draw()) {
             gameStatus("Game draw!");
         }
-
-        console.log("I am inside update status");
     }
 
     // function startGame() {
@@ -217,8 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    socket.on("gameOver", (winner) => {
-        // alert(`${winner} wins by time!`);
+    socket.on("gameOver", ({ winner }) => {
         gameStatus(winner);
     });
 
