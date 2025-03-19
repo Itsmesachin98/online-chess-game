@@ -160,7 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // If the move is invalid, return the piece to its original position
         if (move === null) return "snapback";
         move.fen = game.fen();
+
+        console.log("I am before update status");
         updateStatus();
+        console.log("I am after update status");
 
         // Send the move to the server
         socket.emit("move", { gameId, move });
@@ -178,6 +181,8 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (game.in_draw()) {
             gameStatus("Game draw!");
         }
+
+        console.log("I am inside update status");
     }
 
     // function startGame() {
