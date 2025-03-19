@@ -180,6 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             socket.emit("checkmate", { gameId, winner });
         } else if (game.in_draw()) {
+            console.log("I am draw");
             gameStatus("Game draw!");
         }
     }
