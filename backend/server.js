@@ -144,14 +144,13 @@ io.on("connection", (socket) => {
 
     socket.on("checkmate", ({ gameId, winner }) => {
         clearInterval(games[gameId].activeTimer);
+        games[gameId].isGameOn = false;
         io.to(gameId).emit("gameOver", { winner });
-        delete games[gameId];
     });
 
     // Fires whenever a player disconnects
     socket.on("disconnect", () => {
         let gameId = socket.gameId; // Retrieve gameId from socket
-        console.log("This is the game id", gameId);
         if (gameId && games[gameId] && games[gameId].players[socket.id]) {
             delete games[gameId].players[socket.id];
             io.to(gameId).emit("playerUpdate", games[gameId].players);
