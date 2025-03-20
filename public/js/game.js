@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //     game.in_checkmate()
         // );
 
-        updateStatus();
+        // updateStatus();
     }
 
     function updateStatus() {
