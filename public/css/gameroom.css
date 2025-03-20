@@ -1,7 +1,7 @@
 .interface {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
 }
 
 h2 {
@@ -11,8 +11,6 @@ h2 {
 }
 
 .home-btn {
-    width: auto;
-    flex-shrink: 0;
     padding: 1rem 2rem;
     border: none;
     border-radius: 0.25rem;
