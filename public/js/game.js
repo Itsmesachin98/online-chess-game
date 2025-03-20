@@ -212,7 +212,8 @@ document.addEventListener("DOMContentLoaded", function () {
     socket.on("move", (move) => {
         game.move(move);
         board.position(game.fen());
-        updateStatus();
+        // updateStatus();
+        console.log("Some got mated", game.in_checkmate());
     });
 
     // This updates the timer every second
