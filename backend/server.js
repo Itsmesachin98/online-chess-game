@@ -147,6 +147,7 @@ io.on("connection", (socket) => {
         //     games[gameId].isGameOn = false;
         //     io.to(gameId).emit("gameOver", { winner });
         // }
+        clearInterval(games[gameId].activeTimer);
         io.to(gameId).emit("gameOver", { winner });
     });
 

@@ -161,41 +161,23 @@ document.addEventListener("DOMContentLoaded", function () {
         if (move === null) return "snapback";
         move.fen = game.fen();
 
-        // console.log(
-        //     "someone mated (before sending server): ",
-        //     game.in_checkmate()
-        // );
-
         // Send the move to the server
         socket.emit("move", { gameId, move });
-
-        // console.log(
-        //     "someone mated (after sending server): ",
-        //     game.in_checkmate()
-        // );
-
-        // updateStatus();
     }
 
     function updateStatus() {
         let winner;
         if (game.in_checkmate()) {
-            console.log("Someone got checkmated");
             if (game.turn() === "w") {
-                console.log("Black wins");
                 winner = "Black";
             } else {
-                console.log("White wins");
                 winner = "White";
             }
 
             socket.emit("checkmate", { gameId, winner });
         } else if (game.in_draw()) {
-            console.log("I am draw");
             gameStatus("Game draw!");
         }
-
-        // console.log("Am I running all the time");
     }
 
     // function startGame() {
