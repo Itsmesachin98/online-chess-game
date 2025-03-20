@@ -161,6 +161,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (move === null) return "snapback";
         move.fen = game.fen();
 
+        console.log("someone mated: ", game.in_checkmate());
+
         // Send the move to the server
         socket.emit("move", { gameId, move });
 
@@ -203,7 +205,6 @@ document.addEventListener("DOMContentLoaded", function () {
         game.move(move);
         board.position(game.fen());
         updateStatus();
-        // startGame();
     });
 
     // This updates the timer every second
