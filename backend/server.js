@@ -143,12 +143,9 @@ io.on("connection", (socket) => {
     });
 
     socket.on("checkmate", ({ gameId, winner }) => {
-        // if (games[gameId] && games[gameId].isGameOn) {
-        //     games[gameId].isGameOn = false;
-        //     io.to(gameId).emit("gameOver", { winner });
-        // }
         clearInterval(games[gameId].activeTimer);
         io.to(gameId).emit("gameOver", { winner });
+        delete games[gameId];
     });
 
     // Fires whenever a player disconnects
