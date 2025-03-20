@@ -161,10 +161,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (move === null) return "snapback";
         move.fen = game.fen();
 
-        console.log("someone mated: ", game.in_checkmate());
+        console.log(
+            "someone mated (before sending server): ",
+            game.in_checkmate()
+        );
 
         // Send the move to the server
         socket.emit("move", { gameId, move });
+
+        console.log(
+            "someone mated (after sending server): ",
+            game.in_checkmate()
+        );
 
         // updateStatus();
     }
