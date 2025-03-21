@@ -212,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
         playerBoard.appendChild(status);
     }
 
+    // It creates a Resign button
     function createResignBtn() {
         const resignBtnContainer = document.createElement("div");
         resignBtnContainer.classList.add("resign-btn-container");
@@ -223,4 +224,8 @@ document.addEventListener("DOMContentLoaded", function () {
         resignBtnContainer.appendChild(resignBtn);
         playerBoard.appendChild(resignBtnContainer);
     }
+
+    document.querySelector(".resign-btn").addEventListener("click", () => {
+        console.log("Resign button got clicked");
+    });
 });
