@@ -225,7 +225,9 @@ document.addEventListener("DOMContentLoaded", function () {
         playerBoard.appendChild(resignBtnContainer);
     }
 
-    document.querySelector(".resign-btn").addEventListener("click", () => {
-        console.log("Resign button got clicked");
-    });
+    try {
+        document.querySelector(".resign-btn").addEventListener("click", () => {
+            console.log("Resign button got clicked");
+        });
+    } catch (error) {}
 });
