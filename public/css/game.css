@@ -56,3 +56,24 @@
     color: #fff;
     font-size: 2rem;
 }
+
+.resign-btn-container {
+    width: 100%;
+    margin: 1.6rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.resign-btn {
+    padding: 1rem 2rem;
+    color: #fff;
+    background-color: #ef233c;
+}
+
+.resign-btn:hover {
+    background-color: #d90429;
+}
+
+.resign-btn:active {
+    background-color: #ef233c;
+}
