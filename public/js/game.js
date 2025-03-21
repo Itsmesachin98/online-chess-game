@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     const socket = io("https://online-chess-game-shwe.onrender.com");
-
     // const socket = io("http://localhost:3000");
     console.log("Connected to server");
 
@@ -12,11 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const pathname = window.location.pathname;
     const gameId = pathname.split("/").pop();
-    console.log("This is game id", gameId);
 
     socket.emit("createGame", gameId);
     socket.emit("joinGame", gameId);
-    // localStorage.setItem("gameId", gameId); // Save the gameId in localStorage
 
     let playerName;
     let playerColor;
@@ -33,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     socket.on("roomFull", (redirectUrl) => {
-        // alert("Room is full! Redirecting to game room page...");
         window.location.href = redirectUrl;
     });
 
@@ -66,6 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // When both players join the game, only then can the players make a move.
         if (Object.keys(players).length > 1) {
             bothPlayersJoined = true;
+            if (!document.querySelector(".resign-btn-container")) {
+                createResignBtn();
+            }
         }
 
         let whitePlayer = Object.values(players).find(
@@ -180,22 +179,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // function startGame() {
-    //     isGameOn = true;
-    //     socket.emit("gameStatus", isGameOn);
-    // }
-
-    // socket.on("gameCreated", ({ gameId, link }) => {
-    //     const gameUrl = `${window.location.origin}?gameId=${gameId}`;
-    //     alert(`Game Created!\nGame ID: ${gameId}\nShare this link: ${gameUrl}`);
-    //     console.log(gameUrl);
-    // });
-
     socket.on("move", (move) => {
         game.move(move);
         board.position(game.fen());
         updateStatus();
-        // console.log("Some got mated", game.in_checkmate());
     });
 
     // This updates the timer every second
@@ -224,12 +211,16 @@ document.addEventListener("DOMContentLoaded", function () {
         status.appendChild(statusText);
         playerBoard.appendChild(status);
     }
-});
 
-// window.onload = () => {
-//     const savedGameId = localStorage.getItem("gameId");
-//     if (savedGameId) {
-//         console.log(`Reconnecting to game: ${savedGameId}`);
-//         socket.emit("rejoinGame", savedGameId);
-//     }
-// };
+    function createResignBtn() {
+        const resignBtnContainer = document.createElement("div");
+        resignBtnContainer.classList.add("resign-btn-container");
+
+        const resignBtn = document.createElement("button");
+        resignBtn.classList.add("btn", "resign-btn");
+        resignBtn.innerText = "Resign";
+
+        resignBtnContainer.appendChild(resignBtn);
+        playerBoard.appendChild(resignBtnContainer);
+    }
+});
